@@ -11,14 +11,12 @@
 
 @interface TopPlacesTableViewController ()
 @property (nonatomic, strong) NSArray *topPlaces;
-@property (nonatomic, strong) NSArray *topPlacesTitles;
 @property (nonatomic) BOOL refreshTopPlaces;
 @end
 
 @implementation TopPlacesTableViewController
 @synthesize topPlaces = _topPlaces;
 @synthesize refreshTopPlaces = _refreshTopPlaces;
-@synthesize topPlacesTitles = _topPlacesTitles;
 
 - (NSArray *)topPlaces
 {
@@ -91,9 +89,19 @@
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
+//    componentsSeparatedByCharactersInSet
+    NSArray *topPlacesTitles = [[[self.topPlaces objectAtIndex:indexPath.row] valueForKey:@"_content"] componentsSeparatedByString:@","];
+    NSString *cellTitle = [topPlacesTitles objectAtIndex:0];
     
-    cell.textLabel.text = [[self.topPlaces objectAtIndex:indexPath.row] valueForKey:@"_content"];
-        
+    NSMutableString *cellSubtitle;
+    
+    if (topPlacesTitles.count == 3) {
+        cellSubtitle = [NSString stringWithFormat:@"%@ / %@", [topPlacesTitles objectAtIndex:1], [topPlacesTitles objectAtIndex:2]];
+    } else {
+        cellSubtitle = [topPlacesTitles objectAtIndex:1];
+    }
+    cell.textLabel.text = cellTitle;
+    cell.detailTextLabel.text = cellSubtitle;
     return cell;
 }
 
