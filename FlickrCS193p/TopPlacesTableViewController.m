@@ -11,22 +11,24 @@
 
 @interface TopPlacesTableViewController ()
 @property (nonatomic, strong) NSArray *topPlaces;
+@property (nonatomic, strong) NSArray *topPlacesTitles;
 @property (nonatomic) BOOL refreshTopPlaces;
 @end
 
 @implementation TopPlacesTableViewController
 @synthesize topPlaces = _topPlaces;
 @synthesize refreshTopPlaces = _refreshTopPlaces;
+@synthesize topPlacesTitles = _topPlacesTitles;
 
 - (NSArray *)topPlaces
 {
     if (!_topPlaces || self.refreshTopPlaces) {
-        _topPlaces = [FlickrFetcher topPlaces];
+        NSArray *sortDescriptors = [NSArray arrayWithObject:[[NSSortDescriptor alloc] initWithKey:@"_content" ascending:YES]];
+        _topPlaces = [[FlickrFetcher topPlaces] sortedArrayUsingDescriptors:sortDescriptors];
         self.refreshTopPlaces = NO;
     }
     return _topPlaces;
 }
-
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -91,9 +93,6 @@
     }
     
     cell.textLabel.text = [[self.topPlaces objectAtIndex:indexPath.row] valueForKey:@"_content"];
-
-    //    id program = [self.programs objectAtIndex:indexPath.row];
-//    cell.textLabel.text = [@"y = " stringByAppendingString:[CalculatorBrain descriptionOfProgram:program]];
         
     return cell;
 }
