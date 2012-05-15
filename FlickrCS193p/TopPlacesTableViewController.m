@@ -7,12 +7,26 @@
 //
 
 #import "TopPlacesTableViewController.h"
+#import "FlickrFetcher.h"
 
 @interface TopPlacesTableViewController ()
-
+@property (nonatomic, strong) NSArray *topPlaces;
+@property (nonatomic) BOOL refreshTopPlaces;
 @end
 
 @implementation TopPlacesTableViewController
+@synthesize topPlaces = _topPlaces;
+@synthesize refreshTopPlaces = _refreshTopPlaces;
+
+- (NSArray *)topPlaces
+{
+    if (!_topPlaces || self.refreshTopPlaces) {
+        _topPlaces = [FlickrFetcher topPlaces];
+        self.refreshTopPlaces = NO;
+    }
+    return _topPlaces;
+}
+
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -26,6 +40,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+//    self.refreshTopPlaces = YES;
 
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -57,9 +72,12 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-#warning Incomplete method implementation.
-    // Return the number of rows in the section.
-    return 0;
+//#warning Incomplete method implementation.
+//    // Return the number of rows in the section.
+//    return 0;
+    
+    return [self.topPlaces count];
+
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -67,8 +85,16 @@
     static NSString *CellIdentifier = @"topPlaceCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
-    // Configure the cell...
     
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+    }
+    
+    cell.textLabel.text = [[self.topPlaces objectAtIndex:indexPath.row] valueForKey:@"_content"];
+
+    //    id program = [self.programs objectAtIndex:indexPath.row];
+//    cell.textLabel.text = [@"y = " stringByAppendingString:[CalculatorBrain descriptionOfProgram:program]];
+        
     return cell;
 }
 
