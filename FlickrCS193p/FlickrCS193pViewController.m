@@ -7,6 +7,7 @@
 //
 
 #import "FlickrCS193pViewController.h"
+#import "FlickrFetcher.h"
 
 @interface FlickrCS193pViewController ()
 
@@ -14,9 +15,22 @@
 
 @implementation FlickrCS193pViewController
 
+
+- (void)getTopPlaces
+{
+    NSArray *topPlaces = [FlickrFetcher topPlaces];
+    NSLog(@"TP %@", topPlaces);
+}
+
+
+
+
+// ____________________________________________________
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self getTopPlaces];
 	// Do any additional setup after loading the view, typically from a nib.
 }
 
