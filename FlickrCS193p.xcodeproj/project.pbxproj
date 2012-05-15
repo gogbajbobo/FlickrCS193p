@@ -84,10 +84,10 @@
 			isa = PBXGroup;
 			children = (
 				2C3914361562903B0082277A /* FlickrCS193pAppDelegate.h */,
+				2C3914371562903B0082277A /* FlickrCS193pAppDelegate.m */,
 				2C391447156290860082277A /* FlickrAPIKey.h */,
 				2C391448156290860082277A /* FlickrFetcher.h */,
 				2C391449156290860082277A /* FlickrFetcher.m */,
-				2C3914371562903B0082277A /* FlickrCS193pAppDelegate.m */,
 				2C3914391562903B0082277A /* MainStoryboard_iPhone.storyboard */,
 				2C39143C1562903B0082277A /* MainStoryboard_iPad.storyboard */,
 				2C39143F1562903B0082277A /* FlickrCS193pViewController.h */,
