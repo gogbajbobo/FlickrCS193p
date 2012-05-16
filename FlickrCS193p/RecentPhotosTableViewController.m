@@ -1,36 +1,19 @@
 //
-//  TopPlacesTableViewController.m
+//  RecentPhotosTableViewController.m
 //  FlickrCS193p
 //
-//  Created by Григорьев Максим on 5/15/12.
+//  Created by Григорьев Максим on 5/16/12.
 //  Copyright (c) 2012 Maxim V. Grigoriev. All rights reserved.
 //
 
-#import "TopPlacesTableViewController.h"
-#import "FlickrFetcher.h"
 #import "RecentPhotosTableViewController.h"
 
-@interface TopPlacesTableViewController ()
-@property (nonatomic, strong) NSArray *topPlaces;
-@property (nonatomic) BOOL refreshTopPlaces;
-@property (nonatomic, strong) NSArray *recentPhotosFromPlace;
+@interface RecentPhotosTableViewController ()
+
 @end
 
-@implementation TopPlacesTableViewController
-@synthesize topPlaces = _topPlaces;
-@synthesize refreshTopPlaces = _refreshTopPlaces;
-@synthesize recentPhotosFromPlace = _recentPhotosFromPlace;
-
-- (NSArray *)topPlaces
-{
-    if (!_topPlaces || self.refreshTopPlaces) {
-        NSArray *sortDescriptors = [NSArray arrayWithObject:[[NSSortDescriptor alloc] initWithKey:@"_content" ascending:YES]];
-        _topPlaces = [[FlickrFetcher topPlaces] sortedArrayUsingDescriptors:sortDescriptors];
-        self.refreshTopPlaces = NO;
-    }
-    NSLog(@"_topPlaces %@", _topPlaces);
-    return _topPlaces;
-}
+@implementation RecentPhotosTableViewController
+@synthesize recentPhotos = _recentPhotos;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -44,7 +27,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-//    self.refreshTopPlaces = YES;
 
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -76,35 +58,20 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-//#warning Incomplete method implementation.
-//    // Return the number of rows in the section.
-//    return 0;
-    
-    return [self.topPlaces count];
-
+    // Return the number of rows in the section.
+    return [self.recentPhotos count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"topPlaceCell";
+    static NSString *CellIdentifier = @"resentPhotoCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
+    // Configure the cell...
     
-    if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-    }
-    NSArray *topPlacesTitles = [[[self.topPlaces objectAtIndex:indexPath.row] valueForKey:@"_content"] componentsSeparatedByString:@","];
-    NSString *cellTitle = [topPlacesTitles objectAtIndex:0];
+    cell.textLabel.text = @"1";
+    cell.detailTextLabel.text = @"2";
     
-    NSMutableString *cellSubtitle;
-    
-    if (topPlacesTitles.count == 3) {
-        cellSubtitle = [NSString stringWithFormat:@"%@ / %@", [topPlacesTitles objectAtIndex:1], [topPlacesTitles objectAtIndex:2]];
-    } else {
-        cellSubtitle = [topPlacesTitles objectAtIndex:1];
-    }
-    cell.textLabel.text = cellTitle;
-    cell.detailTextLabel.text = cellSubtitle;
     return cell;
 }
 
@@ -152,24 +119,12 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Navigation logic may go here. Create and push another view controller.
-//     RecentPhotosTableViewController *detailViewController = [[RecentPhotosTableViewController alloc] initWithNibName:nil bundle:nil];
+    /*
+     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
      // ...
      // Pass the selected object to the new view controller.
-//    [self.navigationController pushViewController:detailViewController animated:YES];
-    //    [self.navigationController popViewControllerAnimated:YES];
-    //    [self performSegueWithIdentifier:@"showRecentPhotos" sender:self];
-    
-    self.recentPhotosFromPlace = [FlickrFetcher photosInPlace:[self.topPlaces objectAtIndex:indexPath.row]  maxResults:50];
-    NSLog(@"recentPhotos %@", self.recentPhotosFromPlace);
-//    [self performSegueWithIdentifier:@"showRecentPhotos" sender:self];
-}
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    if ([segue.identifier isEqualToString:@"showRecentPhotos"]) {
-        NSLog(@"recentPhotos %@", self.recentPhotosFromPlace);
-        [segue.destinationViewController setRecentPhotos:self.recentPhotosFromPlace];
-    }
+     [self.navigationController pushViewController:detailViewController animated:YES];
+     */
 }
 
 @end
