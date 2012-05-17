@@ -11,7 +11,7 @@
 #import "RecentPhotosTableViewController.h"
 #import "TopPlacesCell.h"
 
-@interface TopPlacesTableViewController () <RecentPhotosTVCDataSource>
+@interface TopPlacesTableViewController ()
 @property (nonatomic, strong) NSArray *topPlaces;
 @property (nonatomic) BOOL refreshTopPlaces;
 @property (nonatomic, strong) NSArray *recentPhotosFromPlace;
@@ -170,10 +170,9 @@
     if ([segue.identifier isEqualToString:@"showRecentPhotos"]) {
         if ([sender isKindOfClass:[TopPlacesCell class]]) {
             TopPlacesCell *cell = sender;
-            NSLog(@"sender %d",cell.row);
             self.recentPhotosFromPlace = [FlickrFetcher photosInPlace:[self.topPlaces objectAtIndex:cell.row]  maxResults:50];
-            NSLog(@"recentPhotos %@", self.recentPhotosFromPlace);
         }
+        NSLog(@"recentPhotos %@", self.recentPhotosFromPlace);
         [segue.destinationViewController setRecentPhotos:self.recentPhotosFromPlace];
     }
 }

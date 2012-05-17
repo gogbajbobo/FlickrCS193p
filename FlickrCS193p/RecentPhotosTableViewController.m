@@ -4,7 +4,8 @@
 //
 //  Created by Григорьев Максим on 5/16/12.
 //  Copyright (c) 2012 Maxim V. Grigoriev. All rights reserved.
-//
+// 
+
 
 #import "RecentPhotosTableViewController.h"
 
@@ -14,7 +15,6 @@
 
 @implementation RecentPhotosTableViewController
 @synthesize recentPhotos = _recentPhotos;
-@synthesize recentPhotosDataSource = _recentPhotosDataSource;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -68,13 +68,26 @@
     static NSString *CellIdentifier = @"resentPhotoCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
-    // Configure the cell...
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+    }
+    NSString *recentPhotoTitle = [[self.recentPhotos objectAtIndex:indexPath.row] valueForKey:@"title"];
+    NSString *recentPhotoDescription = [[[self.recentPhotos objectAtIndex:indexPath.row] valueForKey:@"description"] valueForKey:@"_content"];
+
+    if ([recentPhotoTitle isEqualToString:@""]) {
+        if ([recentPhotoDescription isEqualToString:@""]) {
+            recentPhotoTitle = @"Unknown";
+        } else {
+            recentPhotoTitle = recentPhotoDescription;
+            recentPhotoDescription = @"";
+        }
+    }
     
-    cell.textLabel.text = @"1";
-    cell.detailTextLabel.text = @"2";
+    cell.textLabel.text = recentPhotoTitle;
+    cell.detailTextLabel.text = recentPhotoDescription;
     
     return cell;
-}
+} 
 
 /*
 // Override to support conditional editing of the table view.
