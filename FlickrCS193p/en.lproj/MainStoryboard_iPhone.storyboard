@@ -91,7 +91,7 @@
                     <navigationItem key="navigationItem" title="Top Places" id="rIr-4c-ZtJ"/>
                 </viewController>
             </objects>
-            <point key="canvasLocation" x="106" y="-378"/>
+            <point key="canvasLocation" x="-2" y="-378"/>
         </scene>
         <!--Recent Photos Table View Controller-->
         <scene sceneID="DGf-lF-GZm">
@@ -103,11 +103,11 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="resentPhotoCell" textLabel="k1L-WP-nPR" detailTextLabel="ZSu-Dg-SAQ" style="IBUITableViewCellStyleSubtitle" id="O40-s1-C7u">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="resentPhotoCell" textLabel="k1L-WP-nPR" detailTextLabel="ZSu-Dg-SAQ" style="IBUITableViewCellStyleSubtitle" id="O40-s1-C7u">
                                 <rect key="frame" x="0.0" y="22" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="300" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="k1L-WP-nPR">
@@ -127,6 +127,9 @@
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
+                                <connections>
+                                    <segue destination="u8n-kE-TJ4" kind="push" identifier="showPhoto" id="krb-wi-tYD"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -137,7 +140,34 @@
                     <navigationItem key="navigationItem" id="2ZQ-j5-BQd"/>
                 </tableViewController>
             </objects>
-            <point key="canvasLocation" x="554" y="-381"/>
+            <point key="canvasLocation" x="406" y="-378"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="yk7-FP-3sM">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ppW-Hn-wOK" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewController id="u8n-kE-TJ4" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="L7I-iL-MEX">
+                        <rect key="frame" x="0.0" y="64" width="320" height="367"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="gIl-oV-miO">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="367"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" id="1xZ-bC-c0a">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="367"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    </imageView>
+                                </subviews>
+                            </scrollView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="Bz3-zb-fPk"/>
+                </viewController>
+            </objects>
+            <point key="canvasLocation" x="828" y="-378"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="tfp-SI-pvY">
@@ -178,6 +208,17 @@
             <point key="canvasLocation" x="-420" y="-378"/>
         </scene>
     </scenes>
+    <classes>
+        <class className="RecentPhotosTableViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/RecentPhotosTableViewController.h"/>
+        </class>
+        <class className="TopPlacesCell" superclassName="UITableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/TopPlacesCell.h"/>
+        </class>
+        <class className="TopPlacesTableViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/TopPlacesTableViewController.h"/>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
