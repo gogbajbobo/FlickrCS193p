@@ -14,6 +14,7 @@
 
 @implementation RecentPhotosTableViewController
 @synthesize recentPhotos = _recentPhotos;
+@synthesize recentPhotosDataSource = _recentPhotosDataSource;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {

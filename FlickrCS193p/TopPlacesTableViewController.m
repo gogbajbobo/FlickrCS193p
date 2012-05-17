@@ -9,8 +9,9 @@
 #import "TopPlacesTableViewController.h"
 #import "FlickrFetcher.h"
 #import "RecentPhotosTableViewController.h"
+#import "TopPlacesCell.h"
 
-@interface TopPlacesTableViewController ()
+@interface TopPlacesTableViewController () <RecentPhotosTVCDataSource>
 @property (nonatomic, strong) NSArray *topPlaces;
 @property (nonatomic) BOOL refreshTopPlaces;
 @property (nonatomic, strong) NSArray *recentPhotosFromPlace;
@@ -28,8 +29,13 @@
         _topPlaces = [[FlickrFetcher topPlaces] sortedArrayUsingDescriptors:sortDescriptors];
         self.refreshTopPlaces = NO;
     }
-    NSLog(@"_topPlaces %@", _topPlaces);
+//    NSLog(@"_topPlaces %@", _topPlaces);
     return _topPlaces;
+}
+
+- (NSArray *)recentPhotos:(int)rowOfPlace
+{
+    return [FlickrFetcher photosInPlace:[self.topPlaces objectAtIndex:rowOfPlace]  maxResults:50];
 }
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -84,14 +90,14 @@
 
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+- (TopPlacesCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"topPlaceCell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    TopPlacesCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     
     if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell = [[TopPlacesCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     NSArray *topPlacesTitles = [[[self.topPlaces objectAtIndex:indexPath.row] valueForKey:@"_content"] componentsSeparatedByString:@","];
     NSString *cellTitle = [topPlacesTitles objectAtIndex:0];
@@ -105,6 +111,7 @@
     }
     cell.textLabel.text = cellTitle;
     cell.detailTextLabel.text = cellSubtitle;
+    cell.row = indexPath.row;
     return cell;
 }
 
@@ -156,18 +163,17 @@
      // ...
      // Pass the selected object to the new view controller.
 //    [self.navigationController pushViewController:detailViewController animated:YES];
-    //    [self.navigationController popViewControllerAnimated:YES];
-    //    [self performSegueWithIdentifier:@"showRecentPhotos" sender:self];
-    
-    self.recentPhotosFromPlace = [FlickrFetcher photosInPlace:[self.topPlaces objectAtIndex:indexPath.row]  maxResults:50];
-    NSLog(@"recentPhotos %@", self.recentPhotosFromPlace);
-//    [self performSegueWithIdentifier:@"showRecentPhotos" sender:self];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([segue.identifier isEqualToString:@"showRecentPhotos"]) {
-        NSLog(@"recentPhotos %@", self.recentPhotosFromPlace);
+        if ([sender isKindOfClass:[TopPlacesCell class]]) {
+            TopPlacesCell *cell = sender;
+            NSLog(@"sender %d",cell.row);
+            self.recentPhotosFromPlace = [FlickrFetcher photosInPlace:[self.topPlaces objectAtIndex:cell.row]  maxResults:50];
+            NSLog(@"recentPhotos %@", self.recentPhotosFromPlace);
+        }
         [segue.destinationViewController setRecentPhotos:self.recentPhotosFromPlace];
     }
 }

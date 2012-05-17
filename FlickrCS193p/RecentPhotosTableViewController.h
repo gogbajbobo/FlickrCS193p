@@ -8,7 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol RecentPhotosTVCDataSource <NSObject>
+
+- (NSArray *)recentPhotos:(int)rowOfPlace;
+
+@end
+
 @interface RecentPhotosTableViewController : UITableViewController
 @property (nonatomic, strong) NSArray *recentPhotos;
+@property (weak, nonatomic) IBOutlet id <RecentPhotosTVCDataSource> recentPhotosDataSource;
 
 @end
