@@ -171,8 +171,8 @@
         if ([sender isKindOfClass:[TopPlacesCell class]]) {
             TopPlacesCell *cell = sender;
             self.recentPhotosFromPlace = [FlickrFetcher photosInPlace:[self.topPlaces objectAtIndex:cell.row]  maxResults:50];
+            [segue.destinationViewController setTitle:cell.textLabel.text];
         }
-        NSLog(@"recentPhotos %@", self.recentPhotosFromPlace);
         [segue.destinationViewController setRecentPhotos:self.recentPhotosFromPlace];
     }
 }

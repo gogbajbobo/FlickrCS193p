@@ -46,7 +46,7 @@
                     <tabBarItem key="tabBarItem" title="Recently Viewed" id="CZb-IJ-hf1"/>
                 </viewController>
             </objects>
-            <point key="canvasLocation" x="-412" y="233"/>
+            <point key="canvasLocation" x="-420" y="234"/>
         </scene>
         <!--Top Places Table View Controller - Top Places-->
         <scene sceneID="fER-zd-THf">
@@ -103,7 +103,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="resentPhotoCell" textLabel="k1L-WP-nPR" detailTextLabel="ZSu-Dg-SAQ" style="IBUITableViewCellStyleSubtitle" id="O40-s1-C7u">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="resentPhotoCell" textLabel="k1L-WP-nPR" detailTextLabel="ZSu-Dg-SAQ" style="IBUITableViewCellStyleSubtitle" id="O40-s1-C7u" customClass="RecentPhotoCell">
                                 <rect key="frame" x="0.0" y="22" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -142,11 +142,11 @@
             </objects>
             <point key="canvasLocation" x="406" y="-378"/>
         </scene>
-        <!--View Controller-->
+        <!--Photo View Controller-->
         <scene sceneID="yk7-FP-3sM">
             <objects>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ppW-Hn-wOK" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <viewController id="u8n-kE-TJ4" sceneMemberID="viewController">
+                <viewController id="u8n-kE-TJ4" customClass="PhotoViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="L7I-iL-MEX">
                         <rect key="frame" x="0.0" y="64" width="320" height="367"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -165,6 +165,10 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" id="Bz3-zb-fPk"/>
+                    <connections>
+                        <outlet property="imageView" destination="1xZ-bC-c0a" id="Axf-XW-ub5"/>
+                        <outlet property="scrollView" destination="gIl-oV-miO" id="Ulh-ly-yny"/>
+                    </connections>
                 </viewController>
             </objects>
             <point key="canvasLocation" x="828" y="-378"/>
@@ -181,8 +185,8 @@
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     </tabBar>
                     <connections>
-                        <segue destination="Zsf-Ht-wEe" kind="relationship" relationship="viewControllers" id="6nT-Jw-fYE"/>
                         <segue destination="FwC-13-fmD" kind="relationship" relationship="viewControllers" id="mRl-MV-X4v"/>
+                        <segue destination="Zsf-Ht-wEe" kind="relationship" relationship="viewControllers" id="6nT-Jw-fYE"/>
                     </connections>
                 </tabBarController>
             </objects>
@@ -208,17 +212,6 @@
             <point key="canvasLocation" x="-420" y="-378"/>
         </scene>
     </scenes>
-    <classes>
-        <class className="RecentPhotosTableViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/RecentPhotosTableViewController.h"/>
-        </class>
-        <class className="TopPlacesCell" superclassName="UITableViewCell">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/TopPlacesCell.h"/>
-        </class>
-        <class className="TopPlacesTableViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/TopPlacesTableViewController.h"/>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

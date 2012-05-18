@@ -8,6 +8,9 @@
 
 
 #import "RecentPhotosTableViewController.h"
+#import "FlickrFetcher.h"
+#import "RecentPhotoCell.h"
+#import "PhotoViewController.h"
 
 @interface RecentPhotosTableViewController ()
 
@@ -63,13 +66,13 @@
     return [self.recentPhotos count];
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+- (RecentPhotoCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"resentPhotoCell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    RecentPhotoCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell = [[RecentPhotoCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     NSString *recentPhotoTitle = [[self.recentPhotos objectAtIndex:indexPath.row] valueForKey:@"title"];
     NSString *recentPhotoDescription = [[[self.recentPhotos objectAtIndex:indexPath.row] valueForKey:@"description"] valueForKey:@"_content"];
@@ -85,7 +88,8 @@
     
     cell.textLabel.text = recentPhotoTitle;
     cell.detailTextLabel.text = recentPhotoDescription;
-    
+    cell.row = indexPath.row;
+
     return cell;
 } 
 
@@ -139,6 +143,18 @@
      // Pass the selected object to the new view controller.
      [self.navigationController pushViewController:detailViewController animated:YES];
      */
+    NSLog(@"URL = %@",[FlickrFetcher urlForPhoto:[self.recentPhotos objectAtIndex:indexPath.row]  format:2]);
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.identifier isEqualToString:@"showPhoto"]) {
+        if ([sender isKindOfClass:[UITableViewCell class]]) {
+            RecentPhotoCell *cell = sender;
+            [segue.destinationViewController setTitle:cell.textLabel.text];
+            [segue.destinationViewController setPhotoURL:[FlickrFetcher urlForPhoto:[self.recentPhotos objectAtIndex:cell.row]  format:2]];
+        }
+    }
 }
 
 @end
