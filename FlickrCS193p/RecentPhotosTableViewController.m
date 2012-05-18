@@ -11,13 +11,15 @@
 #import "FlickrFetcher.h"
 #import "RecentPhotoCell.h"
 #import "PhotoViewController.h"
+#import "RecentPhotos.h"
 
 @interface RecentPhotosTableViewController ()
-
+@property (nonatomic, strong) RecentPhotos *recentPhotosList;
 @end
 
 @implementation RecentPhotosTableViewController
 @synthesize recentPhotos = _recentPhotos;
+@synthesize recentPhotosList = _recentPhotosList;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -152,6 +154,8 @@
             RecentPhotoCell *cell = sender;
             [segue.destinationViewController setTitle:cell.textLabel.text];
             [segue.destinationViewController setPhotoURL:[FlickrFetcher urlForPhoto:[self.recentPhotos objectAtIndex:cell.row]  format:2]];
+            [self.recentPhotosList addPhotoToRecentPhotosList:[self.recentPhotos objectAtIndex:cell.row]];
+            NSLog(@"self.recentPhotosList %@", self.recentPhotosList);
         }
     }
 }
