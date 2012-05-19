@@ -15,11 +15,27 @@
 
 @interface RecentPhotosTableViewController ()
 @property (nonatomic, strong) RecentPhotos *recentPhotosList;
+@property (nonatomic) BOOL recentList;
 @end
 
 @implementation RecentPhotosTableViewController
 @synthesize recentPhotos = _recentPhotos;
 @synthesize recentPhotosList = _recentPhotosList;
+@synthesize recentList = _recentList;
+
+
+- (RecentPhotos *)recentPhotosList
+{
+    if (!_recentPhotosList) _recentPhotosList = [[RecentPhotos alloc] init];
+    return _recentPhotosList;
+}
+
+//- (NSArray *)recentPhotos
+//{
+//    if (!_recentPhotos) _recentPhotos = self.recentPhotosList.recentPhotos;
+//    return _recentPhotos;
+//    NSLog(@"rPh %@", _recentPhotos);
+//}
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -30,8 +46,20 @@
     return self;
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    if (!self.recentPhotos || self.recentList) {
+        if (self.recentPhotosList.recentPhotos.count != self.recentPhotos.count) {
+            self.recentPhotos = self.recentPhotosList.recentPhotos;
+            [self.tableView reloadData];
+        }
+        self.recentList = YES;
+    }
+}
+
 - (void)viewDidLoad
 {
+    self.recentList = NO;
     [super viewDidLoad];
 
     // Uncomment the following line to preserve selection between presentations.
@@ -155,7 +183,6 @@
             [segue.destinationViewController setTitle:cell.textLabel.text];
             [segue.destinationViewController setPhotoURL:[FlickrFetcher urlForPhoto:[self.recentPhotos objectAtIndex:cell.row]  format:2]];
             [self.recentPhotosList addPhotoToRecentPhotosList:[self.recentPhotos objectAtIndex:cell.row]];
-            NSLog(@"self.recentPhotosList %@", self.recentPhotosList);
         }
     }
 }

@@ -28,19 +28,18 @@
 - (void)addPhotoToRecentPhotosList:(NSDictionary *)photo
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    self.recentPhotos = [[defaults objectForKey:RECENT_PHOTOS_KEY] mutableCopy];
-    if (!self.recentPhotos) self.recentPhotos = [NSMutableArray array];
+    NSMutableArray *recentPhotos = [[defaults objectForKey:RECENT_PHOTOS_KEY] mutableCopy];
+    if (!recentPhotos) recentPhotos = [NSMutableArray array];
 
-    NSNumber *currentPhotoID = [photo objectForKey:@"id"];
+    NSString *currentPhotoID = [photo objectForKey:@"id"];
     BOOL duplicate = NO;
-    for (int i = 0; i < self.recentPhotos.count; i++) {
-        NSNumber *photoID = [[self.recentPhotos objectAtIndex:i] objectForKey:@"id"];
-        if ([photoID isEqualToNumber:currentPhotoID]) duplicate = YES;
+    for (int i = 0; i < recentPhotos.count; i++) {
+        NSString *photoID = [[recentPhotos objectAtIndex:i] objectForKey:@"id"];
+        if ([photoID isEqualToString:currentPhotoID]) duplicate = YES;
     }
-    if (!duplicate) [self.recentPhotos insertObject:photo atIndex:0];
-    [defaults setObject:self.recentPhotos forKey:RECENT_PHOTOS_KEY];
+    if (!duplicate) [recentPhotos insertObject:photo atIndex:0];
+    [defaults setObject:recentPhotos forKey:RECENT_PHOTOS_KEY];
     [defaults synchronize];
-    NSLog(@"recentPhotosList %@", self.recentPhotos);
 }
 
 @end

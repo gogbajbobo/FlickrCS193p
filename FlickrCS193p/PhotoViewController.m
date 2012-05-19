@@ -35,7 +35,9 @@
     self.imageView.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:self.photoURL]];
     self.scrollView.contentSize = self.imageView.image.size;
     self.imageView.frame = CGRectMake(0, 0, self.imageView.image.size.width, self.imageView.image.size.height);
-    float yScale = self.view.bounds.size.height / self.scrollView.contentSize.height;
+    int navigationBarHeight = 44;
+    int tabBarHeight = 49;
+    float yScale = (self.view.bounds.size.height - (navigationBarHeight + tabBarHeight)) / self.scrollView.contentSize.height;
     float xScale = self.view.bounds.size.width / self.scrollView.contentSize.width;
     float zoomScale = (xScale < yScale) ? yScale : xScale;
     [self.scrollView setZoomScale:zoomScale];
