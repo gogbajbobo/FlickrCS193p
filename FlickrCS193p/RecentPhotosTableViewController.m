@@ -49,10 +49,8 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     if (!self.recentPhotos || self.recentList) {
-        if (self.recentPhotosList.recentPhotos.count != self.recentPhotos.count) {
-            self.recentPhotos = self.recentPhotosList.recentPhotos;
-            [self.tableView reloadData];
-        }
+        self.recentPhotos = self.recentPhotosList.recentPhotos;
+        [self.tableView reloadData];
         self.recentList = YES;
     }
 }
