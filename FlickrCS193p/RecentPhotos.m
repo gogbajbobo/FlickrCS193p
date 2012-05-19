@@ -39,14 +39,11 @@
         if ([photoID isEqualToString:currentPhotoID]) duplicate = YES;
     }
     if (!duplicate) [recentPhotos insertObject:photo atIndex:0];
-    NSLog(@"count %d", recentPhotos.count);
     if (recentPhotos.count > MAX_NUMBER_OF_PHOTOS) {
         NSRange range;
         range.location = MAX_NUMBER_OF_PHOTOS - 1;
         range.length = recentPhotos.count - MAX_NUMBER_OF_PHOTOS;
-        NSLog(@"range %d %d", range.location, range.length);
         [recentPhotos removeObjectsInRange:range];
-        NSLog(@"count %d", recentPhotos.count);
     }
     [defaults setObject:recentPhotos forKey:RECENT_PHOTOS_KEY];
     [defaults synchronize];
