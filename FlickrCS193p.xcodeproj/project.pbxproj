@@ -55,6 +55,7 @@
 		2C86D6BC1566BDFD00458CBC /* RecentPhotos.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecentPhotos.m; sourceTree = "<group>"; };
 		2C86D6C8156AAE9800458CBC /* SplitViewDelegateUITabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SplitViewDelegateUITabBarController.h; sourceTree = "<group>"; };
 		2C86D6C9156AAE9900458CBC /* SplitViewDelegateUITabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SplitViewDelegateUITabBarController.m; sourceTree = "<group>"; };
+		2C86D6CB156AB2FF00458CBC /* SplitViewBarButtonItemPresenter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SplitViewBarButtonItemPresenter.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,6 +115,7 @@
 				2C39143C1562903B0082277A /* MainStoryboard_iPad.storyboard */,
 				2C86D6C8156AAE9800458CBC /* SplitViewDelegateUITabBarController.h */,
 				2C86D6C9156AAE9900458CBC /* SplitViewDelegateUITabBarController.m */,
+				2C86D6CB156AB2FF00458CBC /* SplitViewBarButtonItemPresenter.h */,
 				2C39144F156296E00082277A /* TopPlacesTableViewController.h */,
 				2C391450156296E00082277A /* TopPlacesTableViewController.m */,
 				2C3914581563EEF40082277A /* RecentPhotosTableViewController.h */,

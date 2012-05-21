@@ -225,15 +225,20 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.20000000298023224" maximumZoomScale="5" id="dEB-ud-Ljf">
-                                <rect key="frame" x="0.0" y="0.0" width="768" height="1004"/>
+                                <rect key="frame" x="0.0" y="44" width="768" height="960"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="TopLeft" id="gHV-a1-rvu">
-                                        <rect key="frame" x="0.0" y="0.0" width="768" height="1004"/>
+                                        <rect key="frame" x="0.0" y="-44" width="768" height="1004"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     </imageView>
                                 </subviews>
                             </scrollView>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="C7a-zM-lFe">
+                                <rect key="frame" x="0.0" y="0.0" width="768" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <items/>
+                            </toolbar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
@@ -242,6 +247,7 @@
                     <connections>
                         <outlet property="imageView" destination="gHV-a1-rvu" id="TWq-m9-Er1"/>
                         <outlet property="scrollView" destination="dEB-ud-Ljf" id="hg5-Sx-l9u"/>
+                        <outlet property="toolbar" destination="C7a-zM-lFe" id="VgY-HV-c4G"/>
                         <outlet property="view" destination="hV6-HS-h9d" id="UcU-xt-oWH"/>
                     </connections>
                 </viewController>
@@ -255,6 +261,7 @@
             <relationships>
                 <relationship kind="outlet" name="imageView" candidateClass="UIImageView"/>
                 <relationship kind="outlet" name="scrollView" candidateClass="UIScrollView"/>
+                <relationship kind="outlet" name="toolbar" candidateClass="UIToolbar"/>
             </relationships>
         </class>
         <class className="RecentPhotoCell" superclassName="UITableViewCell">
