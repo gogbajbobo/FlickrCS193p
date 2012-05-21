@@ -181,7 +181,10 @@
      // Pass the selected object to the new view controller.
      [self.navigationController pushViewController:detailViewController animated:YES];
      */
-    if ([self splitViewPhotoViewController]) [self splitViewPhotoViewController].photoURL = [FlickrFetcher urlForPhoto:[self.recentPhotos objectAtIndex:indexPath.row]  format:2];
+    if ([self splitViewPhotoViewController]) {
+        [self splitViewPhotoViewController].photoURL = [FlickrFetcher urlForPhoto:[self.recentPhotos objectAtIndex:indexPath.row]  format:2];
+        [self.recentPhotosList addPhotoToRecentPhotosList:[self.recentPhotos objectAtIndex:indexPath.row]];
+    }
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender

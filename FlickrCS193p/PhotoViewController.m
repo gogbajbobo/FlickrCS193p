@@ -39,19 +39,38 @@
     self.imageView.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:self.photoURL]];
     self.scrollView.contentSize = self.imageView.image.size;
     self.imageView.frame = CGRectMake(0, 0, self.imageView.image.size.width, self.imageView.image.size.height);
-    int navigationBarHeight = self.navigationController.navigationBar.frame.size.height;
-    int tabBarHeight = self.tabBarController.tabBar.frame.size.height;
-    float height;
-    float width;
-    if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) {
-        height = self.view.bounds.size.height;
-        width = self.view.bounds.size.width;
+    
+    float yScale;
+    float xScale;
+    
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+        int navigationBarHeight = self.navigationController.navigationBar.frame.size.height;
+        int tabBarHeight = self.tabBarController.tabBar.frame.size.height;
+        float height;
+        float width;
+        if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) {
+            height = self.view.bounds.size.height;
+            width = self.view.bounds.size.width;
+        } else {
+            height = self.view.bounds.size.width;
+            width = self.view.bounds.size.height;
+        }
+        yScale = (height - (navigationBarHeight + tabBarHeight)) / self.scrollView.contentSize.height;
+        xScale = width / self.scrollView.contentSize.width;        
     } else {
-        height = self.view.bounds.size.width;
-        width = self.view.bounds.size.height;
+        float height;
+        float width;
+        if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) {
+            height = self.view.bounds.size.height;
+            width = self.view.bounds.size.width;
+        } else {
+            height = self.view.bounds.size.width;
+            width = self.view.bounds.size.height;
+        }
+        yScale = height / self.scrollView.contentSize.height;
+        xScale = width / self.scrollView.contentSize.width;
     }
-    float yScale = (height - (navigationBarHeight + tabBarHeight)) / self.scrollView.contentSize.height;
-    float xScale = width / self.scrollView.contentSize.width;
+    
     float zoomScale = (xScale < yScale) ? yScale : xScale;
     [self.scrollView setZoomScale:zoomScale];
 }
