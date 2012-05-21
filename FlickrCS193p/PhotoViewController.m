@@ -28,10 +28,14 @@
     return self;
 }
 
-- (void)viewDidLoad
+- (void)setPhotoURL:(NSURL *)photoURL
 {
-    [super viewDidLoad];
-    self.scrollView.delegate = self;
+    _photoURL = photoURL;
+    [self showPhoto];
+}
+
+- (void)showPhoto
+{
     self.imageView.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:self.photoURL]];
     self.scrollView.contentSize = self.imageView.image.size;
     self.imageView.frame = CGRectMake(0, 0, self.imageView.image.size.width, self.imageView.image.size.height);
@@ -50,6 +54,13 @@
     float xScale = width / self.scrollView.contentSize.width;
     float zoomScale = (xScale < yScale) ? yScale : xScale;
     [self.scrollView setZoomScale:zoomScale];
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    self.scrollView.delegate = self;
+    [self showPhoto];
 }
 
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView

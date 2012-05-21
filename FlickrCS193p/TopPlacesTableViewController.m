@@ -155,6 +155,7 @@
 }
 */
 
+
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -163,7 +164,7 @@
 //     RecentPhotosTableViewController *detailViewController = [[RecentPhotosTableViewController alloc] initWithNibName:nil bundle:nil];
      // ...
      // Pass the selected object to the new view controller.
-//    [self.navigationController pushViewController:detailViewController animated:YES];
+//    [self.navigationController pushViewController:detailViewController animated:
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender

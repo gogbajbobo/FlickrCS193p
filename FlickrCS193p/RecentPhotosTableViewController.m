@@ -161,6 +161,15 @@
 }
 */
 
+- (PhotoViewController *)splitViewPhotoViewController
+{
+    id phvc = [self.splitViewController.viewControllers lastObject];
+    if (![phvc isKindOfClass:[PhotoViewController class]]) {
+        phvc = nil;
+    }
+    return phvc;
+}
+
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -172,6 +181,7 @@
      // Pass the selected object to the new view controller.
      [self.navigationController pushViewController:detailViewController animated:YES];
      */
+    if ([self splitViewPhotoViewController]) [self splitViewPhotoViewController].photoURL = [FlickrFetcher urlForPhoto:[self.recentPhotos objectAtIndex:indexPath.row]  format:2];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
