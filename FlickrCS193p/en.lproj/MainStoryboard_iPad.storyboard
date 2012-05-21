@@ -20,11 +20,11 @@
             </objects>
             <point key="canvasLocation" x="-245" y="270"/>
         </scene>
-        <!--Tab Bar Controller-->
+        <!--Split View DelegateUI Tab Bar Controller-->
         <scene sceneID="bg1-oH-Dux">
             <objects>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Zj8-Tr-mkT" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <tabBarController id="FGE-Fe-x1y" sceneMemberID="viewController">
+                <tabBarController id="FGE-Fe-x1y" customClass="SplitViewDelegateUITabBarController" sceneMemberID="viewController">
                     <toolbarItems/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <splitViewMasterSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
@@ -262,6 +262,9 @@
         </class>
         <class className="RecentPhotosTableViewController" superclassName="UITableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/RecentPhotosTableViewController.h"/>
+        </class>
+        <class className="SplitViewDelegateUITabBarController" superclassName="UITabBarController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SplitViewDelegateUITabBarController.h"/>
         </class>
         <class className="TopPlacesCell" superclassName="UITableViewCell">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/TopPlacesCell.h"/>

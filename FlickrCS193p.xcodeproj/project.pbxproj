@@ -22,6 +22,7 @@
 		2C86D6B61566683B00458CBC /* RecentPhotoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C86D6B51566683B00458CBC /* RecentPhotoCell.m */; };
 		2C86D6BA1566690E00458CBC /* PhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C86D6B91566690E00458CBC /* PhotoViewController.m */; };
 		2C86D6BD1566BDFD00458CBC /* RecentPhotos.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C86D6BC1566BDFD00458CBC /* RecentPhotos.m */; };
+		2C86D6CA156AAE9900458CBC /* SplitViewDelegateUITabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C86D6C9156AAE9900458CBC /* SplitViewDelegateUITabBarController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,6 +53,8 @@
 		2C86D6B91566690E00458CBC /* PhotoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoViewController.m; sourceTree = "<group>"; };
 		2C86D6BB1566BDFD00458CBC /* RecentPhotos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecentPhotos.h; sourceTree = "<group>"; };
 		2C86D6BC1566BDFD00458CBC /* RecentPhotos.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecentPhotos.m; sourceTree = "<group>"; };
+		2C86D6C8156AAE9800458CBC /* SplitViewDelegateUITabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SplitViewDelegateUITabBarController.h; sourceTree = "<group>"; };
+		2C86D6C9156AAE9900458CBC /* SplitViewDelegateUITabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SplitViewDelegateUITabBarController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +112,8 @@
 				2C86D6B51566683B00458CBC /* RecentPhotoCell.m */,
 				2C3914391562903B0082277A /* MainStoryboard_iPhone.storyboard */,
 				2C39143C1562903B0082277A /* MainStoryboard_iPad.storyboard */,
+				2C86D6C8156AAE9800458CBC /* SplitViewDelegateUITabBarController.h */,
+				2C86D6C9156AAE9900458CBC /* SplitViewDelegateUITabBarController.m */,
 				2C39144F156296E00082277A /* TopPlacesTableViewController.h */,
 				2C391450156296E00082277A /* TopPlacesTableViewController.m */,
 				2C3914581563EEF40082277A /* RecentPhotosTableViewController.h */,
@@ -207,6 +212,7 @@
 				2C86D6B61566683B00458CBC /* RecentPhotoCell.m in Sources */,
 				2C86D6BA1566690E00458CBC /* PhotoViewController.m in Sources */,
 				2C86D6BD1566BDFD00458CBC /* RecentPhotos.m in Sources */,
+				2C86D6CA156AAE9900458CBC /* SplitViewDelegateUITabBarController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
