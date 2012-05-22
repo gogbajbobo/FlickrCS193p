@@ -10,6 +10,7 @@
 
 @implementation TopPlacesCell
 @synthesize row = _row;
+@synthesize section = _section;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {

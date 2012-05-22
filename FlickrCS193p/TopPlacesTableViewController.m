@@ -148,6 +148,7 @@
     }
     cell.textLabel.text = cellTitle;
     cell.detailTextLabel.text = cellSubtitle;
+    cell.section = indexPath.section;
     cell.row = indexPath.row;
     return cell;
 }
@@ -208,7 +209,8 @@
     if ([segue.identifier isEqualToString:@"showRecentPhotos"]) {
         if ([sender isKindOfClass:[TopPlacesCell class]]) {
             TopPlacesCell *cell = sender;
-            self.recentPhotosFromPlace = [FlickrFetcher photosInPlace:[self.topPlaces objectAtIndex:cell.row]  maxResults:50];
+            self.recentPhotosFromPlace = [FlickrFetcher photosInPlace:[[self.topPlacesByCountry objectForKey:[self.topPlacesCountries objectAtIndex:cell.section]] objectAtIndex:cell.row] maxResults:50];
+//            self.recentPhotosFromPlace = [FlickrFetcher photosInPlace:[self.topPlaces objectAtIndex:cell.row]  maxResults:50];
             [segue.destinationViewController setTitle:cell.textLabel.text];
         }
         [segue.destinationViewController setRecentPhotos:self.recentPhotosFromPlace];

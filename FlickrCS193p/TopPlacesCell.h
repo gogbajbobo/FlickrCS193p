@@ -10,5 +10,6 @@
 
 @interface TopPlacesCell : UITableViewCell
 @property (nonatomic) int row;
+@property (nonatomic) int section;
 
 @end
