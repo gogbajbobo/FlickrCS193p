@@ -48,7 +48,9 @@
 - (void)setPhotoURL:(NSURL *)photoURL
 {
     _photoURL = photoURL;
-    [self showPhoto];
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+        [self showPhoto];
+    }
 }
 
 - (void)showPhoto
@@ -56,38 +58,30 @@
     self.imageView.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:self.photoURL]];
     self.scrollView.contentSize = self.imageView.image.size;
     self.imageView.frame = CGRectMake(0, 0, self.imageView.image.size.width, self.imageView.image.size.height);
-    
     float yScale;
     float xScale;
+    float height;
+    float width;
     
+    if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) {
+        height = self.view.bounds.size.height;
+        width = self.view.bounds.size.width;
+        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) height = height - self.toolbar.frame.size.height;
+    } else {
+        height = self.view.bounds.size.width;
+        width = self.view.bounds.size.height;
+    }
+
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
         int navigationBarHeight = self.navigationController.navigationBar.frame.size.height;
         int tabBarHeight = self.tabBarController.tabBar.frame.size.height;
-        float height;
-        float width;
-        if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) {
-            height = self.view.bounds.size.height;
-            width = self.view.bounds.size.width;
-        } else {
-            height = self.view.bounds.size.width;
-            width = self.view.bounds.size.height;
-        }
         yScale = (height - (navigationBarHeight + tabBarHeight)) / self.scrollView.contentSize.height;
-        xScale = width / self.scrollView.contentSize.width;        
+        xScale = width / self.scrollView.contentSize.width;
     } else {
-        float height;
-        float width;
-        if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) {
-            height = self.view.bounds.size.height;
-            width = self.view.bounds.size.width;
-        } else {
-            height = self.view.bounds.size.width;
-            width = self.view.bounds.size.height;
-        }
         yScale = height / self.scrollView.contentSize.height;
         xScale = width / self.scrollView.contentSize.width;
     }
-    
+
     float zoomScale = (xScale < yScale) ? yScale : xScale;
     [self.scrollView setZoomScale:zoomScale];
 }
@@ -96,7 +90,9 @@
 {
     [super viewDidLoad];
     self.scrollView.delegate = self;
-    [self showPhoto];
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+        [self showPhoto];
+    }
 }
 
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
