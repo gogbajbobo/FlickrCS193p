@@ -15,22 +15,52 @@
 @property (nonatomic, strong) NSArray *topPlaces;
 @property (nonatomic) BOOL refreshTopPlaces;
 @property (nonatomic, strong) NSArray *recentPhotosFromPlace;
+@property (nonatomic, strong) NSArray *topPlacesCountries;
+@property (nonatomic, strong) NSDictionary *topPlacesByCountry;
 @end
 
 @implementation TopPlacesTableViewController
 @synthesize topPlaces = _topPlaces;
 @synthesize refreshTopPlaces = _refreshTopPlaces;
 @synthesize recentPhotosFromPlace = _recentPhotosFromPlace;
+@synthesize topPlacesCountries = _topPlacesCountries;
+@synthesize topPlacesByCountry = _topPlacesByCountry;
 
 - (NSArray *)topPlaces
 {
     if (!_topPlaces || self.refreshTopPlaces) {
-        NSArray *sortDescriptors = [NSArray arrayWithObject:[[NSSortDescriptor alloc] initWithKey:@"_content" ascending:YES]];
+        NSArray *sortDescriptors = [NSArray arrayWithObject:[[NSSortDescriptor alloc] initWithKey:@"place_url" ascending:YES]];
         _topPlaces = [[FlickrFetcher topPlaces] sortedArrayUsingDescriptors:sortDescriptors];
         self.refreshTopPlaces = NO;
     }
-//    NSLog(@"_topPlaces %@", _topPlaces);
+    
     return _topPlaces;
+}
+
+- (NSArray *)topPlacesCountries
+{
+    if (!_topPlacesCountries || self.refreshTopPlaces) {
+        NSMutableArray *topPlacesCountries = [NSMutableArray array];
+        for (int i = 0; i < self.topPlaces.count; i++) {
+            NSArray *topPlacesTitles = [[[self.topPlaces objectAtIndex:i] valueForKey:@"place_url"] componentsSeparatedByString:@"/"];
+            if (![topPlacesCountries containsObject:[topPlacesTitles objectAtIndex:1]]) [topPlacesCountries addObject:[topPlacesTitles objectAtIndex:1]];
+        }
+        _topPlacesCountries = topPlacesCountries;
+        
+        NSMutableDictionary *topPlacesByCountry = [NSMutableDictionary dictionary];
+        for (int i = 0; i < _topPlacesCountries.count; i++) {
+            NSString *country = [_topPlacesCountries objectAtIndex:i];
+            NSMutableArray *temp = [NSMutableArray array];
+            for (int j = 0; j < self.topPlaces.count; j++) {
+                NSString *topPlacesTitle = [[[[self.topPlaces objectAtIndex:j] valueForKey:@"place_url"] componentsSeparatedByString:@"/"] objectAtIndex:1];
+                if ([topPlacesTitle isEqualToString:country]) [temp addObject:[self.topPlaces objectAtIndex:j]];
+            }
+            [topPlacesByCountry setObject:temp forKey:country];
+        }
+        self.topPlacesByCountry = topPlacesByCountry;
+        
+    }
+    return _topPlacesCountries;
 }
 
 - (NSArray *)recentPhotos:(int)rowOfPlace
@@ -74,21 +104,26 @@
 
 #pragma mark - Table view data source
 
-//- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-//{
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
 //#warning Potentially incomplete method implementation.
 //    // Return the number of sections.
-//    return 0;
+    return [self.topPlacesCountries count];
+}
+
+//- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView
+//{
+//    return self.topPlacesCountries;
 //}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    return [self.topPlacesCountries objectAtIndex:section];
+}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-//#warning Incomplete method implementation.
-//    // Return the number of rows in the section.
-//    return 0;
-    
-    return [self.topPlaces count];
-
+    return [[self.topPlacesByCountry objectForKey:[self.topPlacesCountries objectAtIndex:section]] count];
 }
 
 - (TopPlacesCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -100,7 +135,8 @@
     if (cell == nil) {
         cell = [[TopPlacesCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
-    NSArray *topPlacesTitles = [[[self.topPlaces objectAtIndex:indexPath.row] valueForKey:@"_content"] componentsSeparatedByString:@","];
+    NSArray *topPlacesTitles = [[[[self.topPlacesByCountry objectForKey:[self.topPlacesCountries objectAtIndex:indexPath.section]] objectAtIndex:indexPath.row] valueForKey:@"_content"] componentsSeparatedByString:@","];
+//    NSArray *topPlacesTitles = [[[self.topPlaces objectAtIndex:indexPath.row] valueForKey:@"_content"] componentsSeparatedByString:@","];
     NSString *cellTitle = [topPlacesTitles objectAtIndex:0];
     
     NSMutableString *cellSubtitle;
