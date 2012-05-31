@@ -17,6 +17,7 @@
 @property (nonatomic, strong) NSArray *recentPhotosFromPlace;
 @property (nonatomic, strong) NSArray *topPlacesCountries;
 @property (nonatomic, strong) NSDictionary *topPlacesByCountry;
+@property (nonatomic, strong) NSString *selectedPlace;
 @end
 
 @implementation TopPlacesTableViewController
@@ -25,6 +26,7 @@
 @synthesize recentPhotosFromPlace = _recentPhotosFromPlace;
 @synthesize topPlacesCountries = _topPlacesCountries;
 @synthesize topPlacesByCountry = _topPlacesByCountry;
+@synthesize selectedPlace = _selectedPlace;
 
 - (NSArray *)topPlaces
 {
@@ -81,24 +83,15 @@
 {
     [super viewDidLoad];
 //    self.refreshTopPlaces = YES;
-
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-//    return (interfaceOrientation == UIInterfaceOrientationPortrait);
     return YES;
 }
 
@@ -106,8 +99,6 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-//#warning Potentially incomplete method implementation.
-//    // Return the number of sections.
     return [self.topPlacesCountries count];
 }
 
@@ -136,7 +127,6 @@
         cell = [[TopPlacesCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     NSArray *topPlacesTitles = [[[[self.topPlacesByCountry objectForKey:[self.topPlacesCountries objectAtIndex:indexPath.section]] objectAtIndex:indexPath.row] valueForKey:@"_content"] componentsSeparatedByString:@","];
-//    NSArray *topPlacesTitles = [[[self.topPlaces objectAtIndex:indexPath.row] valueForKey:@"_content"] componentsSeparatedByString:@","];
     NSString *cellTitle = [topPlacesTitles objectAtIndex:0];
     
     NSMutableString *cellSubtitle;
@@ -153,44 +143,7 @@
     return cell;
 }
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
 
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
 
 
 #pragma mark - Table view delegate
@@ -202,18 +155,26 @@
      // ...
      // Pass the selected object to the new view controller.
 //    [self.navigationController pushViewController:detailViewController animated:
+    
+//    NSLog(@"indexPath.row %d", indexPath.row);
+    
+    self.selectedPlace = [self.tableView cellForRowAtIndexPath:indexPath].textLabel.text;
+    
+    dispatch_queue_t downloadQueue = dispatch_queue_create("flickr downloader", NULL);
+    dispatch_async(downloadQueue, ^{
+        NSArray *recentPhotosFromPlace = [FlickrFetcher photosInPlace:[[self.topPlacesByCountry objectForKey:[self.topPlacesCountries objectAtIndex:indexPath.section]] objectAtIndex:indexPath.row] maxResults:50];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.recentPhotosFromPlace = recentPhotosFromPlace;
+            [self performSegueWithIdentifier:@"showRecentPhotos" sender:self];
+        });
+    });
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([segue.identifier isEqualToString:@"showRecentPhotos"]) {
-        if ([sender isKindOfClass:[TopPlacesCell class]]) {
-            TopPlacesCell *cell = sender;
-            self.recentPhotosFromPlace = [FlickrFetcher photosInPlace:[[self.topPlacesByCountry objectForKey:[self.topPlacesCountries objectAtIndex:cell.section]] objectAtIndex:cell.row] maxResults:50];
-//            self.recentPhotosFromPlace = [FlickrFetcher photosInPlace:[self.topPlaces objectAtIndex:cell.row]  maxResults:50];
-            [segue.destinationViewController setTitle:cell.textLabel.text];
-        }
         [segue.destinationViewController setRecentPhotos:self.recentPhotosFromPlace];
+        [segue.destinationViewController setTitle:self.selectedPlace];
     }
 }
 

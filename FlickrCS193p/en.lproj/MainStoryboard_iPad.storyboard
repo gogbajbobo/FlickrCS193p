@@ -116,14 +116,14 @@
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
-                                <connections>
-                                    <segue destination="VcI-Dj-70H" kind="push" identifier="showRecentPhotos" id="f2p-oy-ejl"/>
-                                </connections>
                             </tableViewCell>
                         </prototypes>
                     </tableView>
                     <navigationItem key="navigationItem" title="Top Places" id="rzU-dd-1lI"/>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="blackTranslucent"/>
+                    <connections>
+                        <segue destination="VcI-Dj-70H" kind="push" identifier="showRecentPhotos" id="nTm-7A-AhU"/>
+                    </connections>
                 </viewController>
             </objects>
             <point key="canvasLocation" x="1774" y="-458"/>

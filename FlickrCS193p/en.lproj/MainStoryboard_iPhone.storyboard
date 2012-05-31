@@ -85,13 +85,13 @@
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
-                                <connections>
-                                    <segue destination="Eub-Cf-3fR" kind="push" identifier="showRecentPhotos" id="DfW-10-swP"/>
-                                </connections>
                             </tableViewCell>
                         </prototypes>
                     </tableView>
                     <navigationItem key="navigationItem" title="Top Places" id="rIr-4c-ZtJ"/>
+                    <connections>
+                        <segue destination="Eub-Cf-3fR" kind="push" identifier="showRecentPhotos" id="ab9-lo-yhN"/>
+                    </connections>
                 </viewController>
             </objects>
             <point key="canvasLocation" x="-2" y="-378"/>
