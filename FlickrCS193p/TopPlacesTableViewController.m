@@ -147,21 +147,20 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Navigation logic may go here. Create and push another view controller.
-//     RecentPhotosTableViewController *detailViewController = [[RecentPhotosTableViewController alloc] initWithNibName:nil bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-//    [self.navigationController pushViewController:detailViewController animated:
-    
-//    NSLog(@"indexPath.row %d", indexPath.row);
-    
     self.selectedPlace = [self.tableView cellForRowAtIndexPath:indexPath].textLabel.text;
-    
+
+    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    [spinner startAnimating];
+    UIBarButtonItem *reloadButton = self.navigationItem.rightBarButtonItem;
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:spinner];
+
     dispatch_queue_t downloadQueue = dispatch_queue_create("flickr downloader", NULL);
     dispatch_async(downloadQueue, ^{
         NSArray *recentPhotosFromPlace = [FlickrFetcher photosInPlace:[[self.topPlacesByCountry objectForKey:[self.topPlacesCountries objectAtIndex:indexPath.section]] objectAtIndex:indexPath.row] maxResults:50];
         dispatch_async(dispatch_get_main_queue(), ^{
             self.recentPhotosFromPlace = recentPhotosFromPlace;
+            [spinner stopAnimating];
+            self.navigationItem.rightBarButtonItem = reloadButton;
             [self performSegueWithIdentifier:@"showRecentPhotos" sender:self];
         });
     });
