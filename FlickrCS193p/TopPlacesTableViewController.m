@@ -9,7 +9,6 @@
 #import "TopPlacesTableViewController.h"
 #import "FlickrFetcher.h"
 #import "RecentPhotosTableViewController.h"
-#import "TopPlacesCell.h"
 
 @interface TopPlacesTableViewController ()
 @property (nonatomic, strong) NSArray *topPlaces;
@@ -117,14 +116,14 @@
     return [[self.topPlacesByCountry objectForKey:[self.topPlacesCountries objectAtIndex:section]] count];
 }
 
-- (TopPlacesCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"topPlaceCell";
-    TopPlacesCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     
     if (cell == nil) {
-        cell = [[TopPlacesCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     NSArray *topPlacesTitles = [[[[self.topPlacesByCountry objectForKey:[self.topPlacesCountries objectAtIndex:indexPath.section]] objectAtIndex:indexPath.row] valueForKey:@"_content"] componentsSeparatedByString:@","];
     NSString *cellTitle = [topPlacesTitles objectAtIndex:0];
@@ -138,8 +137,6 @@
     }
     cell.textLabel.text = cellTitle;
     cell.detailTextLabel.text = cellSubtitle;
-    cell.section = indexPath.section;
-    cell.row = indexPath.row;
     return cell;
 }
 
