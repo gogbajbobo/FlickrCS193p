@@ -37,7 +37,6 @@
     dispatch_async(downloadQueue, ^{
         NSArray *sortDescriptors = [NSArray arrayWithObject:[[NSSortDescriptor alloc] initWithKey:@"place_url" ascending:YES]];
         NSArray *topPlaces = [[FlickrFetcher topPlaces] sortedArrayUsingDescriptors:sortDescriptors];
-        NSLog(@"dqueue");
         dispatch_async(dispatch_get_main_queue(), ^{
             self.topPlaces = topPlaces;
             NSMutableArray *topPlacesCountries = [NSMutableArray array];
@@ -59,15 +58,12 @@
             }
             self.topPlacesByCountry = topPlacesByCountry;
 
-            [spinner stopAnimating];
             self.navigationItem.rightBarButtonItem = reloadButton;
             [self.tableView reloadData];
-            NSLog(@"mainQueue");
         });
     });
     dispatch_release(downloadQueue);
 }
-
 
 - (IBAction)reloadTopPlaces:(id)sender {
     [self loadTopPlacesList];
@@ -92,7 +88,6 @@
 {
     [super viewDidLoad];
     [self loadTopPlacesList];
-    NSLog(@"viewDidLoad");
 }
 
 - (void)viewDidUnload
@@ -170,11 +165,11 @@
         NSArray *recentPhotosFromPlace = [FlickrFetcher photosInPlace:[[self.topPlacesByCountry objectForKey:[self.topPlacesCountries objectAtIndex:indexPath.section]] objectAtIndex:indexPath.row] maxResults:50];
         dispatch_async(dispatch_get_main_queue(), ^{
             self.recentPhotosFromPlace = recentPhotosFromPlace;
-            [spinner stopAnimating];
             self.navigationItem.rightBarButtonItem = reloadButton;
             [self performSegueWithIdentifier:@"showRecentPhotos" sender:self];
         });
     });
+    dispatch_release(downloadQueue);
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender

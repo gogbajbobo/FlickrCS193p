@@ -119,9 +119,16 @@
                             </tableViewCell>
                         </prototypes>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Top Places" id="rzU-dd-1lI"/>
+                    <navigationItem key="navigationItem" title="Top Places" id="rzU-dd-1lI">
+                        <barButtonItem key="rightBarButtonItem" title="Reload" id="iPz-CX-WvN">
+                            <connections>
+                                <action selector="reloadTopPlaces:" destination="grl-K1-Yqb" id="0ce-fS-p7q"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="blackTranslucent"/>
                     <connections>
+                        <outlet property="reloadButton" destination="iPz-CX-WvN" id="C74-CF-H5Z"/>
                         <segue destination="VcI-Dj-70H" kind="push" identifier="showRecentPhotos" id="nTm-7A-AhU"/>
                     </connections>
                 </viewController>
@@ -255,6 +262,31 @@
             <point key="canvasLocation" x="740" y="1678"/>
         </scene>
     </scenes>
+    <classes>
+        <class className="PhotoViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/PhotoViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="imageView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="scrollView" candidateClass="UIScrollView"/>
+                <relationship kind="outlet" name="toolbar" candidateClass="UIToolbar"/>
+            </relationships>
+        </class>
+        <class className="RecentPhotoCell" superclassName="UITableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/RecentPhotoCell.h"/>
+        </class>
+        <class className="RecentPhotosTableViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/RecentPhotosTableViewController.h"/>
+        </class>
+        <class className="SplitViewDelegateUITabBarController" superclassName="UITabBarController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SplitViewDelegateUITabBarController.h"/>
+        </class>
+        <class className="TopPlacesTableViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/TopPlacesTableViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="reloadButton" candidateClass="UIBarButtonItem"/>
+            </relationships>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar" statusBarStyle="blackTranslucent"/>
         <simulatedOrientationMetrics key="orientation"/>
