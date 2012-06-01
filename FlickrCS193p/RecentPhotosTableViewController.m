@@ -16,12 +16,16 @@
 @interface RecentPhotosTableViewController ()
 @property (nonatomic, strong) RecentPhotos *recentPhotosList;
 @property (nonatomic) BOOL recentList;
+@property (nonatomic) UIImage *image;
+@property (nonatomic) NSString *selectedPhotoTitle;
 @end
 
 @implementation RecentPhotosTableViewController
 @synthesize recentPhotos = _recentPhotos;
 @synthesize recentPhotosList = _recentPhotosList;
 @synthesize recentList = _recentList;
+@synthesize image = _image;
+@synthesize selectedPhotoTitle = _selectedPhotoTitle;
 
 
 - (RecentPhotos *)recentPhotosList
@@ -174,6 +178,24 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    self.selectedPhotoTitle = [self.tableView cellForRowAtIndexPath:indexPath].textLabel.text;
+    
+    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    [spinner startAnimating];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:spinner];
+
+    dispatch_queue_t downloadQueue = dispatch_queue_create("flickr downloader", NULL);
+    dispatch_async(downloadQueue, ^{
+        UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[FlickrFetcher urlForPhoto:[self.recentPhotos objectAtIndex:indexPath.row]  format:2]]];
+            [self.recentPhotosList addPhotoToRecentPhotosList:[self.recentPhotos objectAtIndex:indexPath.row]];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.image = image;
+            [spinner stopAnimating];
+            [self performSegueWithIdentifier:@"showPhoto" sender:self];
+        });
+    });
+    dispatch_release(downloadQueue);
+    
     if ([self splitViewPhotoViewController]) {
         [self splitViewPhotoViewController].photoURL = [FlickrFetcher urlForPhoto:[self.recentPhotos objectAtIndex:indexPath.row]  format:2];
         [self.recentPhotosList addPhotoToRecentPhotosList:[self.recentPhotos objectAtIndex:indexPath.row]];
@@ -183,12 +205,10 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([segue.identifier isEqualToString:@"showPhoto"]) {
-        if ([sender isKindOfClass:[UITableViewCell class]]) {
-            RecentPhotoCell *cell = sender;
-            [segue.destinationViewController setTitle:cell.textLabel.text];
-            [segue.destinationViewController setPhotoURL:[FlickrFetcher urlForPhoto:[self.recentPhotos objectAtIndex:cell.row]  format:2]];
-            [self.recentPhotosList addPhotoToRecentPhotosList:[self.recentPhotos objectAtIndex:cell.row]];
-        }
+        [segue.destinationViewController setTitle:self.selectedPhotoTitle];
+        [segue.destinationViewController setPhoto:self.image];
+//        [segue.destinationViewController setPhotoURL:[FlickrFetcher urlForPhoto:[self.recentPhotos objectAtIndex:cell.row]  format:2]];
+//        [self.recentPhotosList addPhotoToRecentPhotosList:[self.recentPhotos objectAtIndex:cell.row]];
     }
 }
 

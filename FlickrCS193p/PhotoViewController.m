@@ -21,6 +21,7 @@
 @synthesize photoURL = _photoURL;
 @synthesize splitViewBarButtonItem = _splitViewBarButtonItem;
 @synthesize toolbar = _toolbar;
+@synthesize photo = _photo;
 
 
 - (void)setSplitViewBarButtonItem:(UIBarButtonItem *)splitViewBarButtonItem
@@ -55,7 +56,8 @@
 
 - (void)showPhoto
 {
-    self.imageView.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:self.photoURL]];
+//    self.imageView.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:self.photoURL]];
+    self.imageView.image = self.photo;
     self.scrollView.contentSize = self.imageView.image.size;
     self.imageView.frame = CGRectMake(0, 0, self.imageView.image.size.width, self.imageView.image.size.height);
     float yScale;
