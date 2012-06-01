@@ -12,57 +12,67 @@
 
 @interface TopPlacesTableViewController ()
 @property (nonatomic, strong) NSArray *topPlaces;
-@property (nonatomic) BOOL refreshTopPlaces;
 @property (nonatomic, strong) NSArray *recentPhotosFromPlace;
 @property (nonatomic, strong) NSArray *topPlacesCountries;
 @property (nonatomic, strong) NSDictionary *topPlacesByCountry;
 @property (nonatomic, strong) NSString *selectedPlace;
+@property (nonatomic) IBOutlet UIBarButtonItem *reloadButton;
 @end
 
 @implementation TopPlacesTableViewController
 @synthesize topPlaces = _topPlaces;
-@synthesize refreshTopPlaces = _refreshTopPlaces;
 @synthesize recentPhotosFromPlace = _recentPhotosFromPlace;
 @synthesize topPlacesCountries = _topPlacesCountries;
 @synthesize topPlacesByCountry = _topPlacesByCountry;
 @synthesize selectedPlace = _selectedPlace;
+@synthesize reloadButton = _reloadButton;
 
-- (NSArray *)topPlaces
-{
-    if (!_topPlaces || self.refreshTopPlaces) {
+- (void)loadTopPlacesList {
+    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    [spinner startAnimating];
+    UIBarButtonItem *reloadButton = self.navigationItem.rightBarButtonItem;
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:spinner];
+
+    dispatch_queue_t downloadQueue = dispatch_queue_create("flickr downloader", NULL);
+    dispatch_async(downloadQueue, ^{
         NSArray *sortDescriptors = [NSArray arrayWithObject:[[NSSortDescriptor alloc] initWithKey:@"place_url" ascending:YES]];
-        _topPlaces = [[FlickrFetcher topPlaces] sortedArrayUsingDescriptors:sortDescriptors];
-        self.refreshTopPlaces = NO;
-    }
-    
-    return _topPlaces;
+        NSArray *topPlaces = [[FlickrFetcher topPlaces] sortedArrayUsingDescriptors:sortDescriptors];
+        NSLog(@"dqueue");
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.topPlaces = topPlaces;
+            NSMutableArray *topPlacesCountries = [NSMutableArray array];
+            for (int i = 0; i < self.topPlaces.count; i++) {
+                NSArray *topPlacesTitles = [[[self.topPlaces objectAtIndex:i] valueForKey:@"place_url"] componentsSeparatedByString:@"/"];
+                if (![topPlacesCountries containsObject:[topPlacesTitles objectAtIndex:1]]) [topPlacesCountries addObject:[topPlacesTitles objectAtIndex:1]];
+            }
+            self.topPlacesCountries = topPlacesCountries;
+            
+            NSMutableDictionary *topPlacesByCountry = [NSMutableDictionary dictionary];
+            for (int i = 0; i < _topPlacesCountries.count; i++) {
+                NSString *country = [_topPlacesCountries objectAtIndex:i];
+                NSMutableArray *temp = [NSMutableArray array];
+                for (int j = 0; j < self.topPlaces.count; j++) {
+                    NSString *topPlacesTitle = [[[[self.topPlaces objectAtIndex:j] valueForKey:@"place_url"] componentsSeparatedByString:@"/"] objectAtIndex:1];
+                    if ([topPlacesTitle isEqualToString:country]) [temp addObject:[self.topPlaces objectAtIndex:j]];
+                }
+                [topPlacesByCountry setObject:temp forKey:country];
+            }
+            self.topPlacesByCountry = topPlacesByCountry;
+
+            [spinner stopAnimating];
+            self.navigationItem.rightBarButtonItem = reloadButton;
+            [self.tableView reloadData];
+            NSLog(@"mainQueue");
+        });
+    });
+    dispatch_release(downloadQueue);
 }
 
-- (NSArray *)topPlacesCountries
-{
-    if (!_topPlacesCountries || self.refreshTopPlaces) {
-        NSMutableArray *topPlacesCountries = [NSMutableArray array];
-        for (int i = 0; i < self.topPlaces.count; i++) {
-            NSArray *topPlacesTitles = [[[self.topPlaces objectAtIndex:i] valueForKey:@"place_url"] componentsSeparatedByString:@"/"];
-            if (![topPlacesCountries containsObject:[topPlacesTitles objectAtIndex:1]]) [topPlacesCountries addObject:[topPlacesTitles objectAtIndex:1]];
-        }
-        _topPlacesCountries = topPlacesCountries;
-        
-        NSMutableDictionary *topPlacesByCountry = [NSMutableDictionary dictionary];
-        for (int i = 0; i < _topPlacesCountries.count; i++) {
-            NSString *country = [_topPlacesCountries objectAtIndex:i];
-            NSMutableArray *temp = [NSMutableArray array];
-            for (int j = 0; j < self.topPlaces.count; j++) {
-                NSString *topPlacesTitle = [[[[self.topPlaces objectAtIndex:j] valueForKey:@"place_url"] componentsSeparatedByString:@"/"] objectAtIndex:1];
-                if ([topPlacesTitle isEqualToString:country]) [temp addObject:[self.topPlaces objectAtIndex:j]];
-            }
-            [topPlacesByCountry setObject:temp forKey:country];
-        }
-        self.topPlacesByCountry = topPlacesByCountry;
-        
-    }
-    return _topPlacesCountries;
+
+- (IBAction)reloadTopPlaces:(id)sender {
+    [self loadTopPlacesList];
 }
+
 
 - (NSArray *)recentPhotos:(int)rowOfPlace
 {
@@ -81,7 +91,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-//    self.refreshTopPlaces = YES;
+    [self loadTopPlacesList];
+    NSLog(@"viewDidLoad");
 }
 
 - (void)viewDidUnload

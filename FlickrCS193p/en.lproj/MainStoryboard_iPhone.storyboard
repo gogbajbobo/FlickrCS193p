@@ -89,9 +89,14 @@
                         </prototypes>
                     </tableView>
                     <navigationItem key="navigationItem" title="Top Places" id="rIr-4c-ZtJ">
-                        <barButtonItem key="rightBarButtonItem" title="Reload" id="4V9-WA-Bd0"/>
+                        <barButtonItem key="rightBarButtonItem" title="Reload" id="4V9-WA-Bd0">
+                            <connections>
+                                <action selector="reloadTopPlaces:" destination="Kqd-mH-nSQ" id="TAt-7f-NlU"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="reloadButton" destination="4V9-WA-Bd0" id="hdD-hi-ixE"/>
                         <segue destination="Eub-Cf-3fR" kind="push" identifier="showRecentPhotos" id="ab9-lo-yhN"/>
                     </connections>
                 </viewController>
@@ -237,25 +242,6 @@
             <point key="canvasLocation" x="-420" y="234"/>
         </scene>
     </scenes>
-    <classes>
-        <class className="PhotoViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/PhotoViewController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="imageView" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="scrollView" candidateClass="UIScrollView"/>
-                <relationship kind="outlet" name="toolbar" candidateClass="UIToolbar"/>
-            </relationships>
-        </class>
-        <class className="RecentPhotoCell" superclassName="UITableViewCell">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/RecentPhotoCell.h"/>
-        </class>
-        <class className="RecentPhotosTableViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/RecentPhotosTableViewController.h"/>
-        </class>
-        <class className="TopPlacesTableViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/TopPlacesTableViewController.h"/>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
