@@ -9,7 +9,6 @@
 
 #import "RecentPhotosTableViewController.h"
 #import "FlickrFetcher.h"
-#import "RecentPhotoCell.h"
 #import "PhotoViewController.h"
 #import "RecentPhotos.h"
 
@@ -83,13 +82,13 @@
     return [self.recentPhotos count];
 }
 
-- (RecentPhotoCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"resentPhotoCell";
-    RecentPhotoCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     if (cell == nil) {
-        cell = [[RecentPhotoCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     NSString *recentPhotoTitle = [[self.recentPhotos objectAtIndex:indexPath.row] valueForKey:@"title"];
     NSString *recentPhotoDescription = [[[self.recentPhotos objectAtIndex:indexPath.row] valueForKey:@"description"] valueForKey:@"_content"];
@@ -105,7 +104,6 @@
     
     cell.textLabel.text = recentPhotoTitle;
     cell.detailTextLabel.text = recentPhotoDescription;
-    cell.row = indexPath.row;
 
     return cell;
 } 
