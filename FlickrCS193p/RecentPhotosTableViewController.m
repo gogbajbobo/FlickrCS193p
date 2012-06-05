@@ -18,6 +18,7 @@
 @property (nonatomic) BOOL recentList;
 @property (nonatomic) UIImage *image;
 @property (nonatomic) NSString *selectedPhotoTitle;
+@property (nonatomic) BOOL rowDidSelected;
 @end
 
 @implementation RecentPhotosTableViewController
@@ -26,6 +27,7 @@
 @synthesize recentList = _recentList;
 @synthesize image = _image;
 @synthesize selectedPhotoTitle = _selectedPhotoTitle;
+@synthesize rowDidSelected = _rowDidSelected;
 
 
 - (RecentPhotos *)recentPhotosList
@@ -178,23 +180,27 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    self.selectedPhotoTitle = [self.tableView cellForRowAtIndexPath:indexPath].textLabel.text;
-    
-    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-    [spinner startAnimating];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:spinner];
-
-    dispatch_queue_t downloadQueue = dispatch_queue_create("flickr downloader", NULL);
-    dispatch_async(downloadQueue, ^{
-        UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[FlickrFetcher urlForPhoto:[self.recentPhotos objectAtIndex:indexPath.row]  format:2]]];
+    if (!self.rowDidSelected) {
+        self.rowDidSelected = YES;
+        self.selectedPhotoTitle = [self.tableView cellForRowAtIndexPath:indexPath].textLabel.text;
+        
+        UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        [spinner startAnimating];
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:spinner];
+        
+        dispatch_queue_t downloadQueue = dispatch_queue_create("flickr downloader", NULL);
+        dispatch_async(downloadQueue, ^{
+            UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[FlickrFetcher urlForPhoto:[self.recentPhotos objectAtIndex:indexPath.row]  format:2]]];
             [self.recentPhotosList addPhotoToRecentPhotosList:[self.recentPhotos objectAtIndex:indexPath.row]];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.image = image;
-            [spinner stopAnimating];
-            [self performSegueWithIdentifier:@"showPhoto" sender:self];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.image = image;
+                [spinner stopAnimating];
+                self.rowDidSelected = NO;
+                [self performSegueWithIdentifier:@"showPhoto" sender:self];
+            });
         });
-    });
-    dispatch_release(downloadQueue);
+        dispatch_release(downloadQueue);
+    }
     
     if ([self splitViewPhotoViewController]) {
         [self splitViewPhotoViewController].photoURL = [FlickrFetcher urlForPhoto:[self.recentPhotos objectAtIndex:indexPath.row]  format:2];
