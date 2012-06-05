@@ -18,7 +18,6 @@
 @implementation PhotoViewController
 @synthesize scrollView = _scrollView;
 @synthesize imageView = _imageView;
-@synthesize photoURL = _photoURL;
 @synthesize splitViewBarButtonItem = _splitViewBarButtonItem;
 @synthesize toolbar = _toolbar;
 @synthesize photo = _photo;
@@ -35,8 +34,6 @@
     }
 }
 
-
-
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -46,9 +43,9 @@
     return self;
 }
 
-- (void)setPhotoURL:(NSURL *)photoURL
+- (void)setPhoto:(UIImage *)photo
 {
-    _photoURL = photoURL;
+    _photo = photo;
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
         [self showPhoto];
     }
@@ -56,7 +53,6 @@
 
 - (void)showPhoto
 {
-//    self.imageView.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:self.photoURL]];
     self.imageView.image = self.photo;
     self.scrollView.contentSize = self.imageView.image.size;
     self.imageView.frame = CGRectMake(0, 0, self.imageView.image.size.width, self.imageView.image.size.height);
@@ -111,7 +107,6 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-//    return (interfaceOrientation == UIInterfaceOrientationPortrait);
     return YES;
 }
 

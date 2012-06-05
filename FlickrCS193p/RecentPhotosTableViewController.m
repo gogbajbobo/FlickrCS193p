@@ -36,13 +36,6 @@
     return _recentPhotosList;
 }
 
-//- (NSArray *)recentPhotos
-//{
-//    if (!_recentPhotos) _recentPhotos = self.recentPhotosList.recentPhotos;
-//    return _recentPhotos;
-//    NSLog(@"rPh %@", _recentPhotos);
-//}
-
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -76,28 +69,17 @@
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-//    return (interfaceOrientation == UIInterfaceOrientationPortrait);
     return YES;
 }
 
 #pragma mark - Table view data source
 
-//- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-//{
-//#warning Potentially incomplete method implementation.
-//    // Return the number of sections.
-//    return 0;
-//}
-
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    // Return the number of rows in the section.
     return [self.recentPhotos count];
 }
 
@@ -195,16 +177,16 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.image = image;
                 [spinner stopAnimating];
+                if ([self splitViewPhotoViewController]) {
+                    [self splitViewPhotoViewController].title = self.selectedPhotoTitle;
+                    [self splitViewPhotoViewController].photo = image;
+                } else {
+                    [self performSegueWithIdentifier:@"showPhoto" sender:self];
+                }
                 self.rowDidSelected = NO;
-                [self performSegueWithIdentifier:@"showPhoto" sender:self];
             });
         });
         dispatch_release(downloadQueue);
-    }
-    
-    if ([self splitViewPhotoViewController]) {
-        [self splitViewPhotoViewController].photoURL = [FlickrFetcher urlForPhoto:[self.recentPhotos objectAtIndex:indexPath.row]  format:2];
-        [self.recentPhotosList addPhotoToRecentPhotosList:[self.recentPhotos objectAtIndex:indexPath.row]];
     }
 }
 
@@ -213,8 +195,6 @@
     if ([segue.identifier isEqualToString:@"showPhoto"]) {
         [segue.destinationViewController setTitle:self.selectedPhotoTitle];
         [segue.destinationViewController setPhoto:self.image];
-//        [segue.destinationViewController setPhotoURL:[FlickrFetcher urlForPhoto:[self.recentPhotos objectAtIndex:cell.row]  format:2]];
-//        [self.recentPhotosList addPhotoToRecentPhotosList:[self.recentPhotos objectAtIndex:cell.row]];
     }
 }
 
