@@ -90,8 +90,9 @@
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
-    NSString *recentPhotoTitle = [[self.recentPhotos objectAtIndex:indexPath.row] valueForKey:@"title"];
-    NSString *recentPhotoDescription = [[[self.recentPhotos objectAtIndex:indexPath.row] valueForKey:@"description"] valueForKey:@"_content"];
+    NSDictionary *photo = [self.recentPhotos objectAtIndex:indexPath.row];
+    NSString *recentPhotoTitle = [photo valueForKey:@"title"];
+    NSString *recentPhotoDescription = [[photo valueForKey:@"description"] valueForKey:@"_content"];
 
     if ([recentPhotoTitle isEqualToString:@""]) {
         if ([recentPhotoDescription isEqualToString:@""]) {
@@ -104,7 +105,19 @@
     
     cell.textLabel.text = recentPhotoTitle;
     cell.detailTextLabel.text = recentPhotoDescription;
+    UIImage *cellImage = [UIImage imageWithData:nil];
+    [cell.imageView setImage:cellImage];
 
+    dispatch_queue_t downloadQueue = dispatch_queue_create("flickr downloader", NULL);
+    dispatch_async(downloadQueue, ^{
+        NSURL *url = [FlickrFetcher urlForPhoto:photo format:FlickrPhotoFormatSquare];
+        NSData *data = [NSData dataWithContentsOfURL:url];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [cell.imageView setImage:[UIImage imageWithData:data]];
+        });
+    });
+    dispatch_release(downloadQueue);
+    
     return cell;
 } 
 
@@ -170,7 +183,7 @@
         
         dispatch_queue_t downloadQueue = dispatch_queue_create("flickr downloader", NULL);
         dispatch_async(downloadQueue, ^{
-            UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[FlickrFetcher urlForPhoto:[self.recentPhotos objectAtIndex:indexPath.row]  format:2]]];
+            UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[FlickrFetcher urlForPhoto:[self.recentPhotos objectAtIndex:indexPath.row] format:2]]];
             [self.recentPhotosList addPhotoToRecentPhotosList:[self.recentPhotos objectAtIndex:indexPath.row]];
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.image = image;
