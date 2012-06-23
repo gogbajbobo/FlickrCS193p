@@ -105,8 +105,8 @@
     
     cell.textLabel.text = recentPhotoTitle;
     cell.detailTextLabel.text = recentPhotoDescription;
-    UIImage *cellImage = [UIImage imageWithData:nil];
-    [cell.imageView setImage:cellImage];
+//    UIImage *cellImage = [UIImage imageWithData:nil];
+//    [cell.imageView setImage:cellImage];
 
     dispatch_queue_t downloadQueue = dispatch_queue_create("flickr downloader", NULL);
     dispatch_async(downloadQueue, ^{

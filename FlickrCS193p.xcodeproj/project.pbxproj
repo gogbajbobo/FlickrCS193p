@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2C1B5EC11595E236006F3E8A /* photo.png in Resources */ = {isa = PBXBuildFile; fileRef = 2C1B5EC01595E236006F3E8A /* photo.png */; };
 		2C3914281562903B0082277A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C3914271562903B0082277A /* UIKit.framework */; };
 		2C39142A1562903B0082277A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C3914291562903B0082277A /* Foundation.framework */; };
 		2C39142C1562903B0082277A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C39142B1562903B0082277A /* CoreGraphics.framework */; };
@@ -24,6 +25,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2C1B5EC01595E236006F3E8A /* photo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = photo.png; sourceTree = "<group>"; };
 		2C3914231562903B0082277A /* FlickrCS193p.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlickrCS193p.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C3914271562903B0082277A /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		2C3914291562903B0082277A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -96,6 +98,7 @@
 		2C39142D1562903B0082277A /* FlickrCS193p */ = {
 			isa = PBXGroup;
 			children = (
+				2C1B5EC01595E236006F3E8A /* photo.png */,
 				2C3914361562903B0082277A /* FlickrCS193pAppDelegate.h */,
 				2C3914371562903B0082277A /* FlickrCS193pAppDelegate.m */,
 				2C391447156290860082277A /* FlickrAPIKey.h */,
@@ -185,6 +188,7 @@
 				2C3914321562903B0082277A /* InfoPlist.strings in Resources */,
 				2C39143B1562903B0082277A /* MainStoryboard_iPhone.storyboard in Resources */,
 				2C39143E1562903B0082277A /* MainStoryboard_iPad.storyboard in Resources */,
+				2C1B5EC11595E236006F3E8A /* photo.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
