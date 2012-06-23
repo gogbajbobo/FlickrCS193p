@@ -14,12 +14,12 @@
 
 @implementation RecentPhotos
 @synthesize recentPhotos = _recentPhotos;
-@synthesize photoCache = _photoCache; // <- should be only thumbnails cache, fullsize photo keep in recentPhoto array
+@synthesize thumbnailsCache = _thumbnailsCache; // <- should be only thumbnails cache, fullsize photo keep in recentPhoto array
 
 #define RECENT_PHOTOS_KEY @"Flickr.recentPhotos"
-#define PHOTOS_CACHE_KEY @"Flickr.photosCache"
+#define THUMBNAILS_CACHE_KEY @"Flickr.photosCache"
 #define MAX_NUMBER_OF_PHOTOS 50
-#define MAX_PHOTOS_IN_CACHE 50
+#define MAX_ITEMS_IN_CACHE 500
 
 - (NSMutableArray *)recentPhotos
 {
@@ -29,12 +29,12 @@
     return _recentPhotos;
 }
 
-- (NSMutableArray *)photoCache
+- (NSMutableArray *)thumbnailsCache
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    _photoCache = [[defaults objectForKey:PHOTOS_CACHE_KEY] mutableCopy];
-    if (!_photoCache) _photoCache = [NSMutableArray array];
-    return _photoCache;
+    _thumbnailsCache = [[defaults objectForKey:THUMBNAILS_CACHE_KEY] mutableCopy];
+    if (!_thumbnailsCache) _thumbnailsCache = [NSMutableArray array];
+    return _thumbnailsCache;
 }
 
 - (void)addPhotoToRecentPhotosList:(NSDictionary *)photo
@@ -62,22 +62,22 @@
 - (void)addPhotoToCache:(NSDictionary *)photo
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSMutableArray *photoCache = self.photoCache;
+    NSMutableArray *thumbnailsCache = self.thumbnailsCache;
     
     NSString *currentPhotoID = [photo objectForKey:@"id"];
     BOOL duplicate = NO;
-    for (int i = 0; i < photoCache.count; i++) {
-        NSString *photoID = [[photoCache objectAtIndex:i] objectForKey:@"id"];
+    for (int i = 0; i < thumbnailsCache.count; i++) {
+        NSString *photoID = [[thumbnailsCache objectAtIndex:i] objectForKey:@"id"];
         if ([photoID isEqualToString:currentPhotoID]) duplicate = YES;
     }
-    if (!duplicate) [photoCache insertObject:photo atIndex:0];
-    if (photoCache.count > MAX_PHOTOS_IN_CACHE) {
+    if (!duplicate) [thumbnailsCache insertObject:photo atIndex:0];
+    if (thumbnailsCache.count > MAX_ITEMS_IN_CACHE) {
         NSRange range;
-        range.location = MAX_PHOTOS_IN_CACHE - 1;
-        range.length = photoCache.count - MAX_PHOTOS_IN_CACHE;
-        [photoCache removeObjectsInRange:range];
+        range.location = MAX_ITEMS_IN_CACHE - 1;
+        range.length = thumbnailsCache.count - MAX_ITEMS_IN_CACHE;
+        [thumbnailsCache removeObjectsInRange:range];
     }
-    [defaults setObject:photoCache forKey:PHOTOS_CACHE_KEY];
+    [defaults setObject:thumbnailsCache forKey:THUMBNAILS_CACHE_KEY];
     [defaults synchronize];
     
 }

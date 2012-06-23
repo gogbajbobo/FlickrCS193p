@@ -183,8 +183,18 @@
         
         dispatch_queue_t downloadQueue = dispatch_queue_create("flickr downloader", NULL);
         dispatch_async(downloadQueue, ^{
-            UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[FlickrFetcher urlForPhoto:[self.recentPhotos objectAtIndex:indexPath.row] format:2]]];
-            [self.recentPhotosList addPhotoToRecentPhotosList:[self.recentPhotos objectAtIndex:indexPath.row]];
+            
+            NSMutableDictionary *photo = [[self.recentPhotos objectAtIndex:indexPath.row] mutableCopy];
+            UIImage *image;
+            NSData *imageData = [photo objectForKey:@"image"];
+            if (imageData) {
+                image = [UIImage imageWithData:imageData];
+            } else {
+                imageData = [NSData dataWithContentsOfURL:[FlickrFetcher urlForPhoto:photo format:2]];
+                image = [UIImage imageWithData:imageData];
+                [photo setObject:imageData forKey:@"image"];
+                [self.recentPhotosList addPhotoToRecentPhotosList:photo];
+            }
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.image = image;
                 [spinner stopAnimating];
