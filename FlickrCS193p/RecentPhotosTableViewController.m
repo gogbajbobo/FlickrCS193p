@@ -94,6 +94,7 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     NSDictionary *photo = [self.recentPhotos objectAtIndex:indexPath.row];
+    NSArray *thumbCache = self.recentPhotosList.thumbnailsCache;
     NSString *recentPhotoTitle = [photo valueForKey:@"title"];
     NSString *recentPhotoDescription = [[photo valueForKey:@"description"] valueForKey:@"_content"];
 
@@ -108,15 +109,15 @@
     
     cell.textLabel.text = recentPhotoTitle;
     cell.detailTextLabel.text = recentPhotoDescription;
-
+    
     dispatch_queue_t downloadQueue = dispatch_queue_create("flickr downloader", NULL);
     dispatch_async(downloadQueue, ^{
         NSData *thumbData;
         UIImage *thumb;
         NSString *photoID = [photo objectForKey:@"id"];
-        for (int i = 0; i < self.recentPhotosList.thumbnailsCache.count; i++) {
-            if ([photoID isEqualToString:[[self.recentPhotosList.thumbnailsCache objectAtIndex:i] objectForKey:@"id"]]) {
-                thumbData = [[self.recentPhotosList.thumbnailsCache objectAtIndex:i] objectForKey:@"thumbData"];
+        for (int i = 0; i < thumbCache.count; i++) {
+            if ([photoID isEqualToString:[[thumbCache objectAtIndex:i] objectForKey:@"id"]]) {
+                thumbData = [[thumbCache objectAtIndex:i] objectForKey:@"thumbData"];
             }
         }
         if (thumbData) {
@@ -197,7 +198,9 @@
     if (!self.rowDidSelected) {
         self.rowDidSelected = YES;
         self.selectedPhotoTitle = [self.tableView cellForRowAtIndexPath:indexPath].textLabel.text;
-        
+
+        NSArray *photoCache = self.recentPhotosList.photosCache;
+
         UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
         [spinner startAnimating];
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:spinner];
@@ -205,14 +208,14 @@
         dispatch_queue_t downloadQueue = dispatch_queue_create("flickr downloader", NULL);
         dispatch_async(downloadQueue, ^{
             
-            NSMutableDictionary *photo = [[self.recentPhotos objectAtIndex:indexPath.row] mutableCopy];
+            NSDictionary *photo = [[self.recentPhotos objectAtIndex:indexPath.row] mutableCopy];
             NSString *photoID = [photo objectForKey:@"id"];
             UIImage *image;
             NSData *imageData;
 
-            for (int i = 0; i < self.recentPhotosList.photosCache.count; i++) {
-                if ([photoID isEqualToString:[[self.recentPhotosList.photosCache objectAtIndex:i] objectForKey:@"id"]]) {
-                    imageData = [[self.recentPhotosList.photosCache objectAtIndex:i] objectForKey:@"imageData"];
+            for (int i = 0; i < photoCache.count; i++) {
+                if ([photoID isEqualToString:[[photoCache objectAtIndex:i] objectForKey:@"id"]]) {
+                    imageData = [[photoCache objectAtIndex:i] objectForKey:@"imageData"];
                 }
             }
 
