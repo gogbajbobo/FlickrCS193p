@@ -57,7 +57,10 @@
 {
     self.recentList = NO;
     [super viewDidLoad];
-
+    
+    NSLog(@"thumbs %d", self.recentPhotosList.thumbnailsCache.count);
+    NSLog(@"photo %d", self.recentPhotosList.photosCache.count);
+    
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
  
@@ -124,6 +127,7 @@
             thumbData = [NSData dataWithContentsOfURL:[FlickrFetcher urlForPhoto:photo format:FlickrPhotoFormatSquare]];
             thumb = [UIImage imageWithData:thumbData];
             [self.recentPhotosList addThumbnailsToCache:[NSDictionary dictionaryWithObjectsAndKeys:photoID, @"id", thumbData, @"thumbData", nil]];
+            NSLog(@"thumbs %d", self.recentPhotosList.thumbnailsCache.count);
         }
         dispatch_async(dispatch_get_main_queue(), ^{
             [cell.imageView setImage:thumb];
@@ -218,6 +222,7 @@
                 [self.recentPhotosList addPhotoToRecentPhotosList:photo];
                 self.recentPhotos = self.recentPhotosList.recentPhotos;
                 [self.recentPhotosList addPhotoToCache:[NSDictionary dictionaryWithObjectsAndKeys:photoID, @"id", imageData, @"imageData", nil]];
+                NSLog(@"photo %d", self.recentPhotosList.photosCache.count);
             }
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.image = image;
