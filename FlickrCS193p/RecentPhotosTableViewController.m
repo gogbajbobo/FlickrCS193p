@@ -125,7 +125,11 @@
         } else {
             NSLog(@"thumb download");
             thumbData = [NSData dataWithContentsOfURL:[FlickrFetcher urlForPhoto:photo format:FlickrPhotoFormatSquare]];
-            thumb = [UIImage imageWithData:thumbData];
+            if (!thumbData) {
+                thumb = cell.imageView.image;
+            } else {
+                thumb = [UIImage imageWithData:thumbData];
+            }
             [self.recentPhotosList addThumbnailsToCache:[NSDictionary dictionaryWithObjectsAndKeys:photoID, @"id", thumbData, @"thumbData", nil]];
             NSLog(@"thumbs %d", self.recentPhotosList.thumbnailsCache.count);
         }
@@ -220,7 +224,6 @@
                 imageData = [NSData dataWithContentsOfURL:[FlickrFetcher urlForPhoto:photo format:2]];
                 image = [UIImage imageWithData:imageData];
                 [self.recentPhotosList addPhotoToRecentPhotosList:photo];
-//                self.recentPhotos = self.recentPhotosList.recentPhotos;
                 [self.recentPhotosList addPhotoToCache:[NSDictionary dictionaryWithObjectsAndKeys:photoID, @"id", imageData, @"imageData", nil]];
                 NSLog(@"photo %d", self.recentPhotosList.photosCache.count);
             }
