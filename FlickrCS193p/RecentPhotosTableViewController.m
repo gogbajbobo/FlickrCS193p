@@ -220,7 +220,7 @@
                 imageData = [NSData dataWithContentsOfURL:[FlickrFetcher urlForPhoto:photo format:2]];
                 image = [UIImage imageWithData:imageData];
                 [self.recentPhotosList addPhotoToRecentPhotosList:photo];
-                self.recentPhotos = self.recentPhotosList.recentPhotos;
+//                self.recentPhotos = self.recentPhotosList.recentPhotos;
                 [self.recentPhotosList addPhotoToCache:[NSDictionary dictionaryWithObjectsAndKeys:photoID, @"id", imageData, @"imageData", nil]];
                 NSLog(@"photo %d", self.recentPhotosList.photosCache.count);
             }
