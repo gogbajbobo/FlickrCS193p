@@ -14,12 +14,15 @@
 
 @implementation RecentPhotos
 @synthesize recentPhotos = _recentPhotos;
-@synthesize thumbnailsCache = _thumbnailsCache; // <- should be only thumbnails cache, fullsize photo keep in recentPhoto array
+@synthesize thumbnailsCache = _thumbnailsCache;
+@synthesize photosCache = _photosCache;
 
 #define RECENT_PHOTOS_KEY @"Flickr.recentPhotos"
-#define THUMBNAILS_CACHE_KEY @"Flickr.photosCache"
 #define MAX_NUMBER_OF_PHOTOS 50
-#define MAX_ITEMS_IN_CACHE 500
+#define PHOTOS_CACHE_KEY @"Flickr.photosCache"
+#define MAX_PHOTOS_IN_CACHE 50
+#define THUMBNAILS_CACHE_KEY @"Flickr.thumbsCache"
+#define MAX_THUMBS_IN_CACHE 500
 
 - (NSMutableArray *)recentPhotos
 {
@@ -35,6 +38,14 @@
     _thumbnailsCache = [[defaults objectForKey:THUMBNAILS_CACHE_KEY] mutableCopy];
     if (!_thumbnailsCache) _thumbnailsCache = [NSMutableArray array];
     return _thumbnailsCache;
+}
+
+- (NSMutableArray *)photosCache
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    _photosCache = [[defaults objectForKey:PHOTOS_CACHE_KEY] mutableCopy];
+    if (!_photosCache) _photosCache = [NSMutableArray array];
+    return _photosCache;
 }
 
 - (void)addPhotoToRecentPhotosList:(NSDictionary *)photo
@@ -62,24 +73,45 @@
 - (void)addPhotoToCache:(NSDictionary *)photo
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSMutableArray *thumbnailsCache = self.thumbnailsCache;
+    NSMutableArray *photosCache = self.photosCache;
     
     NSString *currentPhotoID = [photo objectForKey:@"id"];
+    BOOL duplicate = NO;
+    for (int i = 0; i < photosCache.count; i++) {
+        NSString *photoID = [[photosCache objectAtIndex:i] objectForKey:@"id"];
+        if ([photoID isEqualToString:currentPhotoID]) duplicate = YES;
+    }
+    if (!duplicate) [photosCache insertObject:photo atIndex:0];
+    if (photosCache.count > MAX_PHOTOS_IN_CACHE) {
+        NSRange range;
+        range.location = MAX_PHOTOS_IN_CACHE - 1;
+        range.length = photosCache.count - MAX_PHOTOS_IN_CACHE;
+        [photosCache removeObjectsInRange:range];
+    }
+    [defaults setObject:photosCache forKey:PHOTOS_CACHE_KEY];
+    [defaults synchronize];
+}
+
+- (void)addThumbnailsToCache:(NSDictionary *)thumbnails
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSMutableArray *thumbnailsCache = self.thumbnailsCache;
+    
+    NSString *currentPhotoID = [thumbnails objectForKey:@"id"];
     BOOL duplicate = NO;
     for (int i = 0; i < thumbnailsCache.count; i++) {
         NSString *photoID = [[thumbnailsCache objectAtIndex:i] objectForKey:@"id"];
         if ([photoID isEqualToString:currentPhotoID]) duplicate = YES;
     }
-    if (!duplicate) [thumbnailsCache insertObject:photo atIndex:0];
-    if (thumbnailsCache.count > MAX_ITEMS_IN_CACHE) {
+    if (!duplicate) [thumbnailsCache insertObject:thumbnails atIndex:0];
+    if (thumbnailsCache.count > MAX_THUMBS_IN_CACHE) {
         NSRange range;
-        range.location = MAX_ITEMS_IN_CACHE - 1;
-        range.length = thumbnailsCache.count - MAX_ITEMS_IN_CACHE;
+        range.location = MAX_THUMBS_IN_CACHE - 1;
+        range.length = thumbnailsCache.count - MAX_THUMBS_IN_CACHE;
         [thumbnailsCache removeObjectsInRange:range];
     }
     [defaults setObject:thumbnailsCache forKey:THUMBNAILS_CACHE_KEY];
-    [defaults synchronize];
-    
+    [defaults synchronize];    
 }
 
 @end

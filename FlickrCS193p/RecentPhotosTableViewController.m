@@ -105,15 +105,28 @@
     
     cell.textLabel.text = recentPhotoTitle;
     cell.detailTextLabel.text = recentPhotoDescription;
-//    UIImage *cellImage = [UIImage imageWithData:nil];
-//    [cell.imageView setImage:cellImage];
 
     dispatch_queue_t downloadQueue = dispatch_queue_create("flickr downloader", NULL);
     dispatch_async(downloadQueue, ^{
-        NSURL *url = [FlickrFetcher urlForPhoto:photo format:FlickrPhotoFormatSquare];
-        NSData *data = [NSData dataWithContentsOfURL:url];
+        NSData *thumbData;
+        UIImage *thumb;
+        NSString *photoID = [photo objectForKey:@"id"];
+        for (int i = 0; i < self.recentPhotosList.thumbnailsCache.count; i++) {
+            if ([photoID isEqualToString:[[self.recentPhotosList.thumbnailsCache objectAtIndex:i] objectForKey:@"id"]]) {
+                thumbData = [[self.recentPhotosList.thumbnailsCache objectAtIndex:i] objectForKey:@"thumbData"];
+            }
+        }
+        if (thumbData) {
+            thumb = [UIImage imageWithData:thumbData];
+            NSLog(@"thumb from cache");
+        } else {
+            NSLog(@"thumb download");
+            thumbData = [NSData dataWithContentsOfURL:[FlickrFetcher urlForPhoto:photo format:FlickrPhotoFormatSquare]];
+            thumb = [UIImage imageWithData:thumbData];
+            [self.recentPhotosList addThumbnailsToCache:[NSDictionary dictionaryWithObjectsAndKeys:photoID, @"id", thumbData, @"thumbData", nil]];
+        }
         dispatch_async(dispatch_get_main_queue(), ^{
-            [cell.imageView setImage:[UIImage imageWithData:data]];
+            [cell.imageView setImage:thumb];
         });
     });
     dispatch_release(downloadQueue);
@@ -185,15 +198,26 @@
         dispatch_async(downloadQueue, ^{
             
             NSMutableDictionary *photo = [[self.recentPhotos objectAtIndex:indexPath.row] mutableCopy];
+            NSString *photoID = [photo objectForKey:@"id"];
             UIImage *image;
-            NSData *imageData = [photo objectForKey:@"image"];
+            NSData *imageData;
+
+            for (int i = 0; i < self.recentPhotosList.photosCache.count; i++) {
+                if ([photoID isEqualToString:[[self.recentPhotosList.photosCache objectAtIndex:i] objectForKey:@"id"]]) {
+                    imageData = [[self.recentPhotosList.photosCache objectAtIndex:i] objectForKey:@"imageData"];
+                }
+            }
+
             if (imageData) {
                 image = [UIImage imageWithData:imageData];
+                NSLog(@"image from cache");
             } else {
+                NSLog(@"image download");
                 imageData = [NSData dataWithContentsOfURL:[FlickrFetcher urlForPhoto:photo format:2]];
                 image = [UIImage imageWithData:imageData];
-                [photo setObject:imageData forKey:@"image"];
                 [self.recentPhotosList addPhotoToRecentPhotosList:photo];
+                self.recentPhotos = self.recentPhotosList.recentPhotos;
+                [self.recentPhotosList addPhotoToCache:[NSDictionary dictionaryWithObjectsAndKeys:photoID, @"id", imageData, @"imageData", nil]];
             }
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.image = image;
