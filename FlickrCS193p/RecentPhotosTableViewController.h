@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 
 @interface RecentPhotosTableViewController : UITableViewController
-@property (nonatomic, strong) NSArray *recentPhotos;
+@property (nonatomic, strong) NSMutableArray *recentPhotos;
+
+- (void)addPhotoToRecentPhotosList:(NSDictionary *)photo;
 
 @end

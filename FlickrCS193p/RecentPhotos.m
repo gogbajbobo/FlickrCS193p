@@ -14,7 +14,6 @@
 
 @implementation RecentPhotos
 @synthesize recentPhotos = _recentPhotos;
-@synthesize thumbnailsCache = _thumbnailsCache;
 
 #define RECENT_PHOTOS_KEY @"Flickr.recentPhotos"
 #define MAX_NUMBER_OF_PHOTOS 50

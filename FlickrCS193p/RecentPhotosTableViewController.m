@@ -10,10 +10,10 @@
 #import "RecentPhotosTableViewController.h"
 #import "FlickrFetcher.h"
 #import "PhotoViewController.h"
-#import "RecentPhotos.h"
+//#import "RecentPhotos.h"
 
 @interface RecentPhotosTableViewController ()
-@property (nonatomic, strong) RecentPhotos *recentPhotosList;
+//@property (nonatomic, strong) RecentPhotos *recentPhotosList;
 @property (nonatomic) BOOL recentList;
 @property (nonatomic) UIImage *image;
 @property (nonatomic) NSString *selectedPhotoTitle;
@@ -22,18 +22,52 @@
 
 @implementation RecentPhotosTableViewController
 @synthesize recentPhotos = _recentPhotos;
-@synthesize recentPhotosList = _recentPhotosList;
+//@synthesize recentPhotosList = _recentPhotosList;
 @synthesize recentList = _recentList;
 @synthesize image = _image;
 @synthesize selectedPhotoTitle = _selectedPhotoTitle;
 @synthesize rowDidSelected = _rowDidSelected;
 
 
-- (RecentPhotos *)recentPhotosList
+#define RECENT_PHOTOS_KEY @"Flickr.recentPhotos"
+#define MAX_NUMBER_OF_PHOTOS 50
+
+- (NSMutableArray *)recentPhotos
 {
-    if (!_recentPhotosList) _recentPhotosList = [[RecentPhotos alloc] init];
-    return _recentPhotosList;
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    _recentPhotos = [[defaults objectForKey:RECENT_PHOTOS_KEY] mutableCopy];
+    if (!_recentPhotos) _recentPhotos = [NSMutableArray array];
+    return _recentPhotos;
 }
+
+- (void)addPhotoToRecentPhotosList:(NSDictionary *)photo
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSMutableArray *recentPhotos = self.recentPhotos;
+    
+    NSString *currentPhotoID = [photo objectForKey:@"id"];
+    BOOL duplicate = NO;
+    for (int i = 0; i < recentPhotos.count; i++) {
+        NSString *photoID = [[recentPhotos objectAtIndex:i] objectForKey:@"id"];
+        if ([photoID isEqualToString:currentPhotoID]) duplicate = YES;
+    }
+    if (!duplicate) [recentPhotos insertObject:photo atIndex:0];
+    if (recentPhotos.count > MAX_NUMBER_OF_PHOTOS) {
+        NSRange range;
+        range.location = MAX_NUMBER_OF_PHOTOS - 1;
+        range.length = recentPhotos.count - MAX_NUMBER_OF_PHOTOS;
+        [recentPhotos removeObjectsInRange:range];
+    }
+    [defaults setObject:recentPhotos forKey:RECENT_PHOTOS_KEY];
+    [defaults synchronize];
+}
+
+
+//- (RecentPhotos *)recentPhotosList
+//{
+//    if (!_recentPhotosList) _recentPhotosList = [[RecentPhotos alloc] init];
+//    return _recentPhotosList;
+//}
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -46,11 +80,11 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    if (!self.recentPhotos || self.recentList) {
-        self.recentPhotos = self.recentPhotosList.recentPhotos;
-        [self.tableView reloadData];
-        self.recentList = YES;
-    }
+//    if (!self.recentPhotos || self.recentList) {
+//        self.recentPhotos = self.recentPhotosList.recentPhotos;
+//        [self.tableView reloadData];
+//        self.recentList = YES;
+//    }
 }
 
 - (void)viewDidLoad
@@ -231,7 +265,8 @@
                 NSLog(@"image download");
                 imageData = [NSData dataWithContentsOfURL:[FlickrFetcher urlForPhoto:photo format:2]];
                 image = [UIImage imageWithData:imageData];
-                [self.recentPhotosList addPhotoToRecentPhotosList:photo];
+//                [self.recentPhotosList addPhotoToRecentPhotosList:photo];
+                [self addPhotoToRecentPhotosList:photo];
                 [[NSFileManager defaultManager] createFileAtPath:filePath
                                                         contents:imageData
                                                       attributes:nil];
