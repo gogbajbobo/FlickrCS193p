@@ -18,8 +18,6 @@
 
 #define RECENT_PHOTOS_KEY @"Flickr.recentPhotos"
 #define MAX_NUMBER_OF_PHOTOS 50
-#define THUMBNAILS_CACHE_KEY @"Flickr.thumbsCache"
-#define MAX_THUMBS_IN_CACHE 500
 
 - (NSMutableArray *)recentPhotos
 {
@@ -27,14 +25,6 @@
     _recentPhotos = [[defaults objectForKey:RECENT_PHOTOS_KEY] mutableCopy];
     if (!_recentPhotos) _recentPhotos = [NSMutableArray array];
     return _recentPhotos;
-}
-
-- (NSMutableArray *)thumbnailsCache
-{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    _thumbnailsCache = [[defaults objectForKey:THUMBNAILS_CACHE_KEY] mutableCopy];
-    if (!_thumbnailsCache) _thumbnailsCache = [NSMutableArray array];
-    return _thumbnailsCache;
 }
 
 - (void)addPhotoToRecentPhotosList:(NSDictionary *)photo
@@ -59,21 +49,6 @@
     [defaults synchronize];
 }
 
-- (void)addThumbnailsToCache:(NSDictionary *)thumbnails
-{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSMutableArray *thumbnailsCache = self.thumbnailsCache;
-    
-    [thumbnailsCache insertObject:thumbnails atIndex:0];
-    if (thumbnailsCache.count > MAX_THUMBS_IN_CACHE) {
-        NSRange range;
-        range.location = MAX_THUMBS_IN_CACHE - 1;
-        range.length = thumbnailsCache.count - MAX_THUMBS_IN_CACHE;
-        [thumbnailsCache removeObjectsInRange:range];
-    }
-    [defaults setObject:thumbnailsCache forKey:THUMBNAILS_CACHE_KEY];
-    [defaults synchronize];    
-}
 
 
 @end

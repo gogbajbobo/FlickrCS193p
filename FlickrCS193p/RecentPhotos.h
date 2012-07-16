@@ -13,6 +13,5 @@
 @property (strong, nonatomic) NSMutableArray *thumbnailsCache;
 
 - (void)addPhotoToRecentPhotosList:(NSDictionary *)photo;
-- (void)addThumbnailsToCache:(NSDictionary *)thumbnails;
 
 @end

@@ -94,7 +94,7 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     NSDictionary *photo = [self.recentPhotos objectAtIndex:indexPath.row];
-    NSArray *thumbCache = [self.recentPhotosList.thumbnailsCache copy];
+//    NSArray *thumbCache = [self.recentPhotosList.thumbnailsCache copy];
     NSString *recentPhotoTitle = [photo valueForKey:@"title"];
     NSString *recentPhotoDescription = [[photo valueForKey:@"description"] valueForKey:@"_content"];
 
@@ -115,25 +115,30 @@
         NSData *thumbData;
         UIImage *thumb;
         NSString *photoID = [photo objectForKey:@"id"];
-        for (int i = 0; i < thumbCache.count; i++) {
-            if ([photoID isEqualToString:[[thumbCache objectAtIndex:i] objectForKey:@"id"]]) {
-                thumbData = [[thumbCache objectAtIndex:i] objectForKey:@"thumbData"];
-            }
+        
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *dataPath = [[paths objectAtIndex:0] stringByAppendingPathComponent:@"ThumbCache"];
+        if (![[NSFileManager defaultManager] fileExistsAtPath:dataPath]) {
+            [[NSFileManager defaultManager] createDirectoryAtPath:dataPath withIntermediateDirectories:NO attributes:nil error:nil];
         }
-        if (thumbData) {
-            thumb = [UIImage imageWithData:thumbData];
-//            NSLog(@"thumb from cache");
+        NSString *filePath = [dataPath stringByAppendingPathComponent:photoID];
+        if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
+            NSLog(@"thumb from cache");
+            thumb = [UIImage imageWithContentsOfFile:filePath];
         } else {
-//            NSLog(@"thumb download");
+            NSLog(@"thumb download");
             thumbData = [NSData dataWithContentsOfURL:[FlickrFetcher urlForPhoto:photo format:FlickrPhotoFormatSquare]];
             if (!thumbData) {
                 thumb = cell.imageView.image;
             } else {
                 thumb = [UIImage imageWithData:thumbData];
             }
-            [self.recentPhotosList addThumbnailsToCache:[NSDictionary dictionaryWithObjectsAndKeys:photoID, @"id", thumbData, @"thumbData", nil]];
-//            NSLog(@"thumbs %d", self.recentPhotosList.thumbnailsCache.count);
+            [[NSFileManager defaultManager] createFileAtPath:filePath
+                                                    contents:thumbData
+                                                  attributes:nil];
+            // добавить проверку количества файлов в кэше
         }
+
         dispatch_async(dispatch_get_main_queue(), ^{
             [cell.imageView setImage:thumb];
         });
@@ -210,8 +215,6 @@
             NSString *photoID = [photo objectForKey:@"id"];
             UIImage *image;
             NSData *imageData;
-
-            NSLog(@"photoID %@", photoID);
             
             NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
             NSString *dataPath = [[paths objectAtIndex:0] stringByAppendingPathComponent:@"PhotoCache"];
@@ -232,6 +235,7 @@
                 [[NSFileManager defaultManager] createFileAtPath:filePath
                                                         contents:imageData
                                                       attributes:nil];
+                // добавить проверку количества файлов в кэше
             }
             
 
