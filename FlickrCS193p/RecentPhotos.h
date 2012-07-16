@@ -11,10 +11,8 @@
 @interface RecentPhotos : NSObject
 @property (strong, nonatomic) NSMutableArray *recentPhotos;
 @property (strong, nonatomic) NSMutableArray *thumbnailsCache;
-@property (strong, nonatomic) NSMutableArray *photosCache;
 
 - (void)addPhotoToRecentPhotosList:(NSDictionary *)photo;
-- (void)addPhotoToCache:(NSDictionary *)photo;
 - (void)addThumbnailsToCache:(NSDictionary *)thumbnails;
 
 @end

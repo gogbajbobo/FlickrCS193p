@@ -58,8 +58,8 @@
     self.recentList = NO;
     [super viewDidLoad];
     
-    NSLog(@"thumbs %d", self.recentPhotosList.thumbnailsCache.count);
-    NSLog(@"photo %d", self.recentPhotosList.photosCache.count);
+//    NSLog(@"thumbs %d", self.recentPhotosList.thumbnailsCache.count);
+//    NSLog(@"photo %d", self.recentPhotosList.photosCache.count);
     
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -94,7 +94,7 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     NSDictionary *photo = [self.recentPhotos objectAtIndex:indexPath.row];
-    NSArray *thumbCache = self.recentPhotosList.thumbnailsCache;
+    NSArray *thumbCache = [self.recentPhotosList.thumbnailsCache copy];
     NSString *recentPhotoTitle = [photo valueForKey:@"title"];
     NSString *recentPhotoDescription = [[photo valueForKey:@"description"] valueForKey:@"_content"];
 
@@ -122,9 +122,9 @@
         }
         if (thumbData) {
             thumb = [UIImage imageWithData:thumbData];
-            NSLog(@"thumb from cache");
+//            NSLog(@"thumb from cache");
         } else {
-            NSLog(@"thumb download");
+//            NSLog(@"thumb download");
             thumbData = [NSData dataWithContentsOfURL:[FlickrFetcher urlForPhoto:photo format:FlickrPhotoFormatSquare]];
             if (!thumbData) {
                 thumb = cell.imageView.image;
@@ -132,7 +132,7 @@
                 thumb = [UIImage imageWithData:thumbData];
             }
             [self.recentPhotosList addThumbnailsToCache:[NSDictionary dictionaryWithObjectsAndKeys:photoID, @"id", thumbData, @"thumbData", nil]];
-            NSLog(@"thumbs %d", self.recentPhotosList.thumbnailsCache.count);
+//            NSLog(@"thumbs %d", self.recentPhotosList.thumbnailsCache.count);
         }
         dispatch_async(dispatch_get_main_queue(), ^{
             [cell.imageView setImage:thumb];
@@ -199,8 +199,6 @@
         self.rowDidSelected = YES;
         self.selectedPhotoTitle = [self.tableView cellForRowAtIndexPath:indexPath].textLabel.text;
 
-        NSArray *photoCache = self.recentPhotosList.photosCache;
-
         UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
         [spinner startAnimating];
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:spinner];
@@ -213,23 +211,30 @@
             UIImage *image;
             NSData *imageData;
 
-            for (int i = 0; i < photoCache.count; i++) {
-                if ([photoID isEqualToString:[[photoCache objectAtIndex:i] objectForKey:@"id"]]) {
-                    imageData = [[photoCache objectAtIndex:i] objectForKey:@"imageData"];
-                }
+            NSLog(@"photoID %@", photoID);
+            
+            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+            NSString *dataPath = [[paths objectAtIndex:0] stringByAppendingPathComponent:@"PhotoCache"];
+            if (![[NSFileManager defaultManager] fileExistsAtPath:dataPath]) {
+                [[NSFileManager defaultManager] createDirectoryAtPath:dataPath withIntermediateDirectories:NO attributes:nil error:nil];
             }
-
-            if (imageData) {
-                image = [UIImage imageWithData:imageData];
+            NSString *filePath = [dataPath stringByAppendingPathComponent:photoID];
+            if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
+                NSLog(@"File exist");
                 NSLog(@"image from cache");
+                image = [UIImage imageWithContentsOfFile:filePath];
             } else {
+                NSLog(@"File not found");
                 NSLog(@"image download");
                 imageData = [NSData dataWithContentsOfURL:[FlickrFetcher urlForPhoto:photo format:2]];
                 image = [UIImage imageWithData:imageData];
                 [self.recentPhotosList addPhotoToRecentPhotosList:photo];
-                [self.recentPhotosList addPhotoToCache:[NSDictionary dictionaryWithObjectsAndKeys:photoID, @"id", imageData, @"imageData", nil]];
-                NSLog(@"photo %d", self.recentPhotosList.photosCache.count);
+                [[NSFileManager defaultManager] createFileAtPath:filePath
+                                                        contents:imageData
+                                                      attributes:nil];
             }
+            
+
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.image = image;
                 [spinner stopAnimating];
