@@ -29,6 +29,8 @@
 
 #define RECENT_PHOTOS_KEY @"Flickr.recentPhotos"
 #define MAX_NUMBER_OF_PHOTOS 50
+#define MAX_NUMBER_OF_THUMBS 200
+#define MAX_SIZE_OF_CACHE_IN_MB 10
 
 - (NSMutableArray *)recentPhotos
 {
@@ -84,10 +86,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-//    NSLog(@"thumbs %d", self.recentPhotosList.thumbnailsCache.count);
-//    NSLog(@"photo %d", self.recentPhotosList.photosCache.count);
-    
+        
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
  
@@ -255,6 +254,7 @@
                 [[NSFileManager defaultManager] createFileAtPath:filePath
                                                         contents:imageData
                                                       attributes:nil];
+                [self checkCacheSize:dataPath];
                 // добавить проверку количества файлов в кэше
             }
             
@@ -282,5 +282,48 @@
         [segue.destinationViewController setPhoto:self.image];
     }
 }
+
+- (void)checkCacheSize:(NSString *)cachePath {
+    if ([self folderSize:cachePath] > MAX_SIZE_OF_CACHE_IN_MB * 1024 * 1024) {
+//        NSLog(@"Need to clean");
+        NSArray *filesPathArray = [[NSFileManager defaultManager] subpathsOfDirectoryAtPath:cachePath error:nil];
+        NSEnumerator *filesEnumerator = [filesPathArray objectEnumerator];
+        NSString *fileName;
+        NSMutableArray *filesAttributeArray = [NSMutableArray array];
+
+        while (fileName = [filesEnumerator nextObject]) {
+            NSString *filePath = [cachePath stringByAppendingPathComponent:fileName];
+            NSMutableDictionary *fileDic = [[[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil] mutableCopy];
+            [fileDic setValue:fileName forKey:@"FileName"];
+            [filesAttributeArray addObject:fileDic];
+        }
+
+        NSArray *sortDescriptors = [NSArray arrayWithObject:[[NSSortDescriptor alloc] initWithKey:@"NSFileModificationDate" ascending:NO]];
+        filesAttributeArray = [[filesAttributeArray sortedArrayUsingDescriptors:sortDescriptors] mutableCopy];
+
+        NSString *fileNameToDelete = [[filesAttributeArray lastObject] objectForKey:@"FileName"];
+        NSString *filePath = [cachePath stringByAppendingPathComponent:fileNameToDelete];
+        [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
+
+        [self checkCacheSize:cachePath];
+    } else {
+//        NSLog(@"No need to clean");
+    }
+}
+
+- (int)folderSize:(NSString *)folderPath {
+    NSArray *filesArray = [[NSFileManager defaultManager] subpathsOfDirectoryAtPath:folderPath error:nil];
+    NSEnumerator *filesEnumerator = [filesArray objectEnumerator];
+    NSString *fileName;
+    int fileSize = 0;
+    
+    while (fileName = [filesEnumerator nextObject]) {
+        NSDictionary *fileDictionary = [[NSFileManager defaultManager] attributesOfItemAtPath:[folderPath stringByAppendingPathComponent:fileName] error:nil];
+        fileSize += [fileDictionary fileSize];
+    }
+    
+    return fileSize;
+}
+
 
 @end
