@@ -81,6 +81,11 @@
         self.refreshRecentPhotoList = YES;
         [self.tableView reloadData];
     }
+    // This should be placed somethere else
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *dataPath = [[paths objectAtIndex:0] stringByAppendingPathComponent:@"ThumbCache"];
+    [self checkNumberOfFilesInCache:dataPath];
+    //
 }
 
 - (void)viewDidLoad
@@ -159,7 +164,6 @@
             [[NSFileManager defaultManager] createFileAtPath:filePath
                                                     contents:thumbData
                                                   attributes:nil];
-            // добавить проверку количества файлов в кэше
         }
 
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -255,7 +259,6 @@
                                                         contents:imageData
                                                       attributes:nil];
                 [self checkCacheSize:dataPath];
-                // добавить проверку количества файлов в кэше
             }
             
 
@@ -323,6 +326,36 @@
     }
     
     return fileSize;
+}
+
+- (void)checkNumberOfFilesInCache:(NSString *)cachePath {
+    NSArray *filesPathArray = [[NSFileManager defaultManager] subpathsOfDirectoryAtPath:cachePath error:nil];
+    NSLog(@"Thumb cache %d", filesPathArray.count);
+    if (filesPathArray.count > MAX_NUMBER_OF_THUMBS) {
+        NSLog(@"Need to remove files");
+        NSEnumerator *filesEnumerator = [filesPathArray objectEnumerator];
+        NSString *fileName;
+        NSMutableArray *filesAttributeArray = [NSMutableArray array];
+
+        while (fileName = [filesEnumerator nextObject]) {
+            NSString *filePath = [cachePath stringByAppendingPathComponent:fileName];
+            NSMutableDictionary *fileDic = [[[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil] mutableCopy];
+            [fileDic setValue:fileName forKey:@"FileName"];
+            [filesAttributeArray addObject:fileDic];
+        }
+        NSArray *sortDescriptors = [NSArray arrayWithObject:[[NSSortDescriptor alloc] initWithKey:@"NSFileModificationDate" ascending:NO]];
+        filesAttributeArray = [[filesAttributeArray sortedArrayUsingDescriptors:sortDescriptors] mutableCopy];
+        
+        NSString *fileNameToDelete = [[filesAttributeArray lastObject] objectForKey:@"FileName"];
+        NSString *filePath = [cachePath stringByAppendingPathComponent:fileNameToDelete];
+        [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
+        
+        [self checkNumberOfFilesInCache:cachePath];
+        
+    } else {
+        NSLog(@"No need to remove files");
+    }
+
 }
 
 
