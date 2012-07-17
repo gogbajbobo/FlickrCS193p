@@ -28,12 +28,12 @@
 
 
 #define RECENT_PHOTOS_KEY @"Flickr.recentPhotos"
-#define MAX_NUMBER_OF_PHOTOS 50
-#define MAX_NUMBER_OF_THUMBS 200
-#define MAX_SIZE_OF_CACHE_IN_MB 10
+#define MAX_NUMBER_OF_PHOTOS 5
+#define MAX_NUMBER_OF_THUMBS 100
+#define MAX_SIZE_OF_CACHE_IN_MB 2
 
-- (NSMutableArray *)recentPhotos
-{
+- (NSMutableArray *)recentPhotos {
+    
     if (!self.photosFromPlace && self.refreshRecentPhotoList) {
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         _recentPhotos = [[defaults objectForKey:RECENT_PHOTOS_KEY] mutableCopy];
@@ -43,8 +43,8 @@
     return _recentPhotos;
 }
 
-- (void)addPhotoToRecentPhotosList:(NSDictionary *)photo
-{
+- (void)addPhotoToRecentPhotosList:(NSDictionary *)photo {
+    
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSMutableArray *recentPhotosList = [[defaults objectForKey:RECENT_PHOTOS_KEY] mutableCopy];
     if (!recentPhotosList) recentPhotosList = [NSMutableArray array];
@@ -81,11 +81,6 @@
         self.refreshRecentPhotoList = YES;
         [self.tableView reloadData];
     }
-    // This should be placed somethere else
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *dataPath = [[paths objectAtIndex:0] stringByAppendingPathComponent:@"ThumbCache"];
-    [self checkNumberOfFilesInCache:dataPath];
-    //
 }
 
 - (void)viewDidLoad
@@ -111,13 +106,13 @@
 
 #pragma mark - Table view data source
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    
     return [self.recentPhotos count];
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
     static NSString *CellIdentifier = @"resentPhotoCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
@@ -147,11 +142,11 @@
         NSString *photoID = [photo objectForKey:@"id"];
         
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-        NSString *dataPath = [[paths objectAtIndex:0] stringByAppendingPathComponent:@"ThumbCache"];
-        if (![[NSFileManager defaultManager] fileExistsAtPath:dataPath]) {
-            [[NSFileManager defaultManager] createDirectoryAtPath:dataPath withIntermediateDirectories:NO attributes:nil error:nil];
+        NSString *thumbPath = [[paths objectAtIndex:0] stringByAppendingPathComponent:@"ThumbCache"];
+        if (![[NSFileManager defaultManager] fileExistsAtPath:thumbPath]) {
+            [[NSFileManager defaultManager] createDirectoryAtPath:thumbPath withIntermediateDirectories:NO attributes:nil error:nil];
         }
-        NSString *filePath = [dataPath stringByAppendingPathComponent:photoID];
+        NSString *filePath = [thumbPath stringByAppendingPathComponent:photoID];
         if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
             thumb = [UIImage imageWithContentsOfFile:filePath];
         } else {
@@ -167,6 +162,11 @@
         }
 
         dispatch_async(dispatch_get_main_queue(), ^{
+            dispatch_queue_t cacheCheckingQueue = dispatch_queue_create("cache cheking", NULL);
+            dispatch_async(cacheCheckingQueue, ^{
+                [self checkNumberOfFilesInCache:thumbPath];
+            });
+            dispatch_release(cacheCheckingQueue);
             [cell.imageView setImage:thumb];
         });
     });
@@ -214,8 +214,8 @@
 }
 */
 
-- (PhotoViewController *)splitViewPhotoViewController
-{
+- (PhotoViewController *)splitViewPhotoViewController{
+    
     id phvc = [self.splitViewController.viewControllers lastObject];
     if (![phvc isKindOfClass:[PhotoViewController class]]) {
         phvc = nil;
@@ -225,8 +225,8 @@
 
 #pragma mark - Table view delegate
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
     if (!self.rowDidSelected) {
         self.rowDidSelected = YES;
         self.selectedPhotoTitle = [self.tableView cellForRowAtIndexPath:indexPath].textLabel.text;
@@ -278,8 +278,8 @@
     }
 }
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    
     if ([segue.identifier isEqualToString:@"showPhoto"]) {
         [segue.destinationViewController setTitle:self.selectedPhotoTitle];
         [segue.destinationViewController setPhoto:self.image];
@@ -287,6 +287,7 @@
 }
 
 - (void)checkCacheSize:(NSString *)cachePath {
+    
     if ([self folderSize:cachePath] > MAX_SIZE_OF_CACHE_IN_MB * 1024 * 1024) {
 //        NSLog(@"Need to clean");
         NSArray *filesPathArray = [[NSFileManager defaultManager] subpathsOfDirectoryAtPath:cachePath error:nil];
@@ -315,6 +316,7 @@
 }
 
 - (int)folderSize:(NSString *)folderPath {
+    
     NSArray *filesArray = [[NSFileManager defaultManager] subpathsOfDirectoryAtPath:folderPath error:nil];
     NSEnumerator *filesEnumerator = [filesArray objectEnumerator];
     NSString *fileName;
@@ -329,6 +331,7 @@
 }
 
 - (void)checkNumberOfFilesInCache:(NSString *)cachePath {
+    
     NSArray *filesPathArray = [[NSFileManager defaultManager] subpathsOfDirectoryAtPath:cachePath error:nil];
     NSLog(@"Thumb cache %d", filesPathArray.count);
     if (filesPathArray.count > MAX_NUMBER_OF_THUMBS) {
@@ -340,18 +343,25 @@
         while (fileName = [filesEnumerator nextObject]) {
             NSString *filePath = [cachePath stringByAppendingPathComponent:fileName];
             NSMutableDictionary *fileDic = [[[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil] mutableCopy];
+            if (!fileDic) fileDic = [NSMutableDictionary dictionary];
             [fileDic setValue:fileName forKey:@"FileName"];
             [filesAttributeArray addObject:fileDic];
         }
         NSArray *sortDescriptors = [NSArray arrayWithObject:[[NSSortDescriptor alloc] initWithKey:@"NSFileModificationDate" ascending:NO]];
         filesAttributeArray = [[filesAttributeArray sortedArrayUsingDescriptors:sortDescriptors] mutableCopy];
-        
-        NSString *fileNameToDelete = [[filesAttributeArray lastObject] objectForKey:@"FileName"];
-        NSString *filePath = [cachePath stringByAppendingPathComponent:fileNameToDelete];
-        [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
-        
-        [self checkNumberOfFilesInCache:cachePath];
-        
+                
+        NSLog(@"count1 %d",filesAttributeArray.count);
+        NSRange range;
+        range.location = 0;
+        range.length = MAX_NUMBER_OF_THUMBS;
+        [filesAttributeArray removeObjectsInRange:range];
+        NSLog(@"count2 %d",filesAttributeArray.count);
+        for (int i = 0; i < filesAttributeArray.count; i++) {
+            NSString *fileNameToDelete = [[filesAttributeArray objectAtIndex:i] objectForKey:@"FileName"];
+            NSString *filePath = [cachePath stringByAppendingPathComponent:fileNameToDelete];
+            [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
+        }
+//        [self checkNumberOfFilesInCache:cachePath];
     } else {
         NSLog(@"No need to remove files");
     }
