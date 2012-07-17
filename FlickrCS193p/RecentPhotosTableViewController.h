@@ -10,7 +10,7 @@
 
 @interface RecentPhotosTableViewController : UITableViewController
 @property (nonatomic, strong) NSMutableArray *recentPhotos;
+@property (nonatomic) BOOL photosFromPlace;
 
-- (void)addPhotoToRecentPhotosList:(NSDictionary *)photo;
 
 @end

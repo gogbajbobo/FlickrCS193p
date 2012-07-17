@@ -176,6 +176,7 @@
 {
     if ([segue.identifier isEqualToString:@"showRecentPhotos"]) {
         [segue.destinationViewController setRecentPhotos:[self.recentPhotosFromPlace mutableCopy]];
+        [segue.destinationViewController setPhotosFromPlace:YES];
         [segue.destinationViewController setTitle:self.selectedPlace];
     }
 }
