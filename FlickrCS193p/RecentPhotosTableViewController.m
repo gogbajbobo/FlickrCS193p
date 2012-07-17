@@ -32,10 +32,11 @@
 
 - (NSMutableArray *)recentPhotos
 {
-    if (!self.photosFromPlace) {
+    if (!self.photosFromPlace && self.refreshRecentPhotoList) {
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         _recentPhotos = [[defaults objectForKey:RECENT_PHOTOS_KEY] mutableCopy];
         if (!_recentPhotos) _recentPhotos = [NSMutableArray array];
+        self.refreshRecentPhotoList = NO;
     }
     return _recentPhotos;
 }
@@ -74,7 +75,10 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-
+    if (!self.photosFromPlace) {
+        self.refreshRecentPhotoList = YES;
+        [self.tableView reloadData];
+    }
 }
 
 - (void)viewDidLoad
@@ -117,7 +121,6 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     NSDictionary *photo = [self.recentPhotos objectAtIndex:indexPath.row];
-//    NSArray *thumbCache = [self.recentPhotosList.thumbnailsCache copy];
     NSString *recentPhotoTitle = [photo valueForKey:@"title"];
     NSString *recentPhotoDescription = [[photo valueForKey:@"description"] valueForKey:@"_content"];
 
@@ -146,10 +149,8 @@
         }
         NSString *filePath = [dataPath stringByAppendingPathComponent:photoID];
         if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
-//            NSLog(@"thumb from cache");
             thumb = [UIImage imageWithContentsOfFile:filePath];
         } else {
-//            NSLog(@"thumb download");
             thumbData = [NSData dataWithContentsOfURL:[FlickrFetcher urlForPhoto:photo format:FlickrPhotoFormatSquare]];
             if (!thumbData) {
                 thumb = cell.imageView.image;
@@ -246,12 +247,8 @@
             }
             NSString *filePath = [dataPath stringByAppendingPathComponent:photoID];
             if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
-//                NSLog(@"File exist");
-//                NSLog(@"image from cache");
                 image = [UIImage imageWithContentsOfFile:filePath];
             } else {
-//                NSLog(@"File not found");
-//                NSLog(@"image download");
                 imageData = [NSData dataWithContentsOfURL:[FlickrFetcher urlForPhoto:photo format:2]];
                 image = [UIImage imageWithData:imageData];
                 [self addPhotoToRecentPhotosList:photo];
