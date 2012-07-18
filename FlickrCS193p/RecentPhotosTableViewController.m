@@ -16,6 +16,7 @@
 @property (nonatomic) NSString *selectedPhotoTitle;
 @property (nonatomic) BOOL rowDidSelected;
 @property (nonatomic) BOOL refreshRecentPhotoList;
+@property (nonatomic) BOOL checkingCache;
 @end
 
 @implementation RecentPhotosTableViewController
@@ -25,6 +26,7 @@
 @synthesize selectedPhotoTitle = _selectedPhotoTitle;
 @synthesize rowDidSelected = _rowDidSelected;
 @synthesize refreshRecentPhotoList = _refreshRecentPhotoList;
+@synthesize checkingCache = _checkingCache;
 
 
 #define RECENT_PHOTOS_KEY @"Flickr.recentPhotos"
@@ -57,8 +59,8 @@
     if (!duplicate) [recentPhotosList insertObject:photo atIndex:0];
     if (recentPhotosList.count > MAX_NUMBER_OF_PHOTOS) {
         NSRange range;
-        range.location = MAX_NUMBER_OF_PHOTOS - 1;
-        range.length = recentPhotosList.count - MAX_NUMBER_OF_PHOTOS;
+        range.location = MAX_NUMBER_OF_PHOTOS;
+        range.length = recentPhotosList.count - range.location;
         [recentPhotosList removeObjectsInRange:range];
     }
     [defaults setObject:recentPhotosList forKey:RECENT_PHOTOS_KEY];
@@ -164,7 +166,11 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             dispatch_queue_t cacheCheckingQueue = dispatch_queue_create("cache cheking", NULL);
             dispatch_async(cacheCheckingQueue, ^{
-                [self checkNumberOfFilesInCache:thumbPath];
+                if (!self.checkingCache) {
+                    self.checkingCache = YES;
+                    [self checkNumberOfFilesInCache:thumbPath];
+                }
+                self.checkingCache = NO;
             });
             dispatch_release(cacheCheckingQueue);
             [cell.imageView setImage:thumb];
@@ -333,9 +339,9 @@
 - (void)checkNumberOfFilesInCache:(NSString *)cachePath {
     
     NSArray *filesPathArray = [[NSFileManager defaultManager] subpathsOfDirectoryAtPath:cachePath error:nil];
-    NSLog(@"Thumb cache %d", filesPathArray.count);
+//    NSLog(@"Thumb cache %d", filesPathArray.count);
     if (filesPathArray.count > MAX_NUMBER_OF_THUMBS) {
-        NSLog(@"Need to remove files");
+//        NSLog(@"Need to remove files");
         NSEnumerator *filesEnumerator = [filesPathArray objectEnumerator];
         NSString *fileName;
         NSMutableArray *filesAttributeArray = [NSMutableArray array];
@@ -350,12 +356,12 @@
         NSArray *sortDescriptors = [NSArray arrayWithObject:[[NSSortDescriptor alloc] initWithKey:@"NSFileModificationDate" ascending:NO]];
         filesAttributeArray = [[filesAttributeArray sortedArrayUsingDescriptors:sortDescriptors] mutableCopy];
                 
-        NSLog(@"count1 %d",filesAttributeArray.count);
+//        NSLog(@"count1 %d",filesAttributeArray.count);
         NSRange range;
         range.location = 0;
         range.length = MAX_NUMBER_OF_THUMBS;
         [filesAttributeArray removeObjectsInRange:range];
-        NSLog(@"count2 %d",filesAttributeArray.count);
+//        NSLog(@"count2 %d",filesAttributeArray.count);
         for (int i = 0; i < filesAttributeArray.count; i++) {
             NSString *fileNameToDelete = [[filesAttributeArray objectAtIndex:i] objectForKey:@"FileName"];
             NSString *filePath = [cachePath stringByAppendingPathComponent:fileNameToDelete];
@@ -363,7 +369,7 @@
         }
 //        [self checkNumberOfFilesInCache:cachePath];
     } else {
-        NSLog(@"No need to remove files");
+//        NSLog(@"No need to remove files");
     }
 
 }
