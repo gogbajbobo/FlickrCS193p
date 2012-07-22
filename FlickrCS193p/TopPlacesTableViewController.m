@@ -32,8 +32,8 @@
 - (void)loadTopPlacesList {
     UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     [spinner startAnimating];
-    UIBarButtonItem *reloadButton = self.navigationItem.rightBarButtonItem;
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:spinner];
+    UIBarButtonItem *reloadButton = self.navigationItem.leftBarButtonItem;
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:spinner];
 
     dispatch_queue_t downloadQueue = dispatch_queue_create("flickr downloader", NULL);
     dispatch_async(downloadQueue, ^{
@@ -61,7 +61,7 @@
             }
             self.topPlacesByCountry = topPlacesByCountry;
 
-            self.navigationItem.rightBarButtonItem = reloadButton;
+            self.navigationItem.leftBarButtonItem = reloadButton;
             [self.tableView reloadData];
         });
     });
@@ -160,15 +160,15 @@
 
     UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     [spinner startAnimating];
-    UIBarButtonItem *reloadButton = self.navigationItem.rightBarButtonItem;
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:spinner];
+    UIBarButtonItem *reloadButton = self.navigationItem.leftBarButtonItem;
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:spinner];
 
     dispatch_queue_t downloadQueue = dispatch_queue_create("flickr downloader", NULL);
     dispatch_async(downloadQueue, ^{
         NSArray *recentPhotosFromPlace = [FlickrFetcher photosInPlace:[[self.topPlacesByCountry objectForKey:[self.topPlacesCountries objectAtIndex:indexPath.section]] objectAtIndex:indexPath.row] maxResults:50];
         dispatch_async(dispatch_get_main_queue(), ^{
             self.recentPhotosFromPlace = recentPhotosFromPlace;
-            self.navigationItem.rightBarButtonItem = reloadButton;
+            self.navigationItem.leftBarButtonItem = reloadButton;
             [self performSegueWithIdentifier:@"showRecentPhotos" sender:self];
         });
     });

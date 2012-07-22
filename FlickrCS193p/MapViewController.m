@@ -10,8 +10,7 @@
 #import <MapKit/MapKit.h>
 
 
-@interface MapViewController ()
-//<MKMapViewDelegate>
+@interface MapViewController () <MKMapViewDelegate>
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
 
 @end
@@ -19,7 +18,7 @@
 @implementation MapViewController
 @synthesize mapView = _mapView;
 @synthesize annotations = _annotations;
-//@synthesize delegate = _delegate;
+@synthesize delegate = _delegate;
 
 - (void)updateMapView
 {
@@ -56,14 +55,14 @@
 
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)aView
 {
-//    UIImage *image = [self.delegate mapViewController:self imageForAnnotation:aView.annotation];
-//    [(UIImageView *)aView.leftCalloutAccessoryView setImage:image];
+    UIImage *image = [self.delegate mapViewController:self imageForAnnotation:aView.annotation];
+    [(UIImageView *)aView.leftCalloutAccessoryView setImage:image];
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-//    self.mapView.delegate = self;
+    self.mapView.delegate = self;
 	// Do any additional setup after loading the view.
 }
 
