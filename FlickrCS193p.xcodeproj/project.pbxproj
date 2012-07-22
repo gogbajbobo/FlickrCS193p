@@ -21,6 +21,9 @@
 		2C39145A1563EEF40082277A /* RecentPhotosTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C3914591563EEF40082277A /* RecentPhotosTableViewController.m */; };
 		2C86D6BA1566690E00458CBC /* PhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C86D6B91566690E00458CBC /* PhotoViewController.m */; };
 		2C86D6CA156AAE9900458CBC /* SplitViewDelegateUITabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C86D6C9156AAE9900458CBC /* SplitViewDelegateUITabBarController.m */; };
+		2CE4713115BC4F4400B092DB /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE4713015BC4F4400B092DB /* MapViewController.m */; };
+		2CE4713315BC518000B092DB /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE4713215BC518000B092DB /* MapKit.framework */; };
+		2CE4713515BC519300B092DB /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE4713415BC519200B092DB /* CoreLocation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -49,6 +52,10 @@
 		2C86D6C8156AAE9800458CBC /* SplitViewDelegateUITabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SplitViewDelegateUITabBarController.h; sourceTree = "<group>"; };
 		2C86D6C9156AAE9900458CBC /* SplitViewDelegateUITabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SplitViewDelegateUITabBarController.m; sourceTree = "<group>"; };
 		2C86D6CB156AB2FF00458CBC /* SplitViewBarButtonItemPresenter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SplitViewBarButtonItemPresenter.h; sourceTree = "<group>"; };
+		2CE4712F15BC4F4400B092DB /* MapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapViewController.h; sourceTree = "<group>"; };
+		2CE4713015BC4F4400B092DB /* MapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapViewController.m; sourceTree = "<group>"; };
+		2CE4713215BC518000B092DB /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		2CE4713415BC519200B092DB /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +63,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2CE4713515BC519300B092DB /* CoreLocation.framework in Frameworks */,
+				2CE4713315BC518000B092DB /* MapKit.framework in Frameworks */,
 				2C3914281562903B0082277A /* UIKit.framework in Frameworks */,
 				2C39142A1562903B0082277A /* Foundation.framework in Frameworks */,
 				2C39142C1562903B0082277A /* CoreGraphics.framework in Frameworks */,
@@ -68,6 +77,8 @@
 		2C3914181562903B0082277A = {
 			isa = PBXGroup;
 			children = (
+				2CE4713415BC519200B092DB /* CoreLocation.framework */,
+				2CE4713215BC518000B092DB /* MapKit.framework */,
 				2C39142D1562903B0082277A /* FlickrCS193p */,
 				2C3914261562903B0082277A /* Frameworks */,
 				2C3914241562903B0082277A /* Products */,
@@ -95,6 +106,8 @@
 		2C39142D1562903B0082277A /* FlickrCS193p */ = {
 			isa = PBXGroup;
 			children = (
+				2CE4712F15BC4F4400B092DB /* MapViewController.h */,
+				2CE4713015BC4F4400B092DB /* MapViewController.m */,
 				2C1B5EC01595E236006F3E8A /* photo.png */,
 				2C3914361562903B0082277A /* FlickrCS193pAppDelegate.h */,
 				2C3914371562903B0082277A /* FlickrCS193pAppDelegate.m */,
@@ -201,6 +214,7 @@
 				2C39145A1563EEF40082277A /* RecentPhotosTableViewController.m in Sources */,
 				2C86D6BA1566690E00458CBC /* PhotoViewController.m in Sources */,
 				2C86D6CA156AAE9900458CBC /* SplitViewDelegateUITabBarController.m in Sources */,
+				2CE4713115BC4F4400B092DB /* MapViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

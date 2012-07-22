@@ -17,6 +17,7 @@
 @property (nonatomic, strong) NSDictionary *topPlacesByCountry;
 @property (nonatomic, strong) NSString *selectedPlace;
 @property (nonatomic) IBOutlet UIBarButtonItem *reloadButton;
+@property (nonatomic) IBOutlet UIBarButtonItem *mapButton;
 @end
 
 @implementation TopPlacesTableViewController
@@ -26,6 +27,7 @@
 @synthesize topPlacesByCountry = _topPlacesByCountry;
 @synthesize selectedPlace = _selectedPlace;
 @synthesize reloadButton = _reloadButton;
+@synthesize mapButton = _mapButton;
 
 - (void)loadTopPlacesList {
     UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
@@ -39,6 +41,7 @@
         NSArray *topPlaces = [[FlickrFetcher topPlaces] sortedArrayUsingDescriptors:sortDescriptors];
         dispatch_async(dispatch_get_main_queue(), ^{
             self.topPlaces = topPlaces;
+//            NSLog(@"topPlaces %@", topPlaces);
             NSMutableArray *topPlacesCountries = [NSMutableArray array];
             for (int i = 0; i < self.topPlaces.count; i++) {
                 NSArray *topPlacesTitles = [[[self.topPlaces objectAtIndex:i] valueForKey:@"place_url"] componentsSeparatedByString:@"/"];

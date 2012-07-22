@@ -55,6 +55,30 @@
             </objects>
             <point key="canvasLocation" x="-2" y="234"/>
         </scene>
+        <!--Map View Controller-->
+        <scene sceneID="Np2-aS-SR4">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="LL4-DI-2KD" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewController id="cKq-xB-zx5" customClass="MapViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Bv2-GU-9hr">
+                        <rect key="frame" x="0.0" y="64" width="320" height="367"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" id="lTV-Zy-Ocd">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="367"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            </mapView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="6Rr-dP-3sw"/>
+                    <connections>
+                        <outlet property="mapView" destination="lTV-Zy-Ocd" id="YQ5-yd-pQd"/>
+                    </connections>
+                </viewController>
+            </objects>
+            <point key="canvasLocation" x="-2" y="-986"/>
+        </scene>
         <!--Top Places Table View Controller - Top Places-->
         <scene sceneID="fER-zd-THf">
             <objects>
@@ -93,13 +117,19 @@
                         </prototypes>
                     </tableView>
                     <navigationItem key="navigationItem" title="Top Places" id="rIr-4c-ZtJ">
-                        <barButtonItem key="rightBarButtonItem" title="Reload" id="4V9-WA-Bd0">
+                        <barButtonItem key="leftBarButtonItem" title="Reload" id="4V9-WA-Bd0">
                             <connections>
                                 <action selector="reloadTopPlaces:" destination="Kqd-mH-nSQ" id="TAt-7f-NlU"/>
                             </connections>
                         </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Map" id="LVb-IJ-zGj">
+                            <connections>
+                                <segue destination="cKq-xB-zx5" kind="push" id="R6w-Bh-c0e"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="mapButton" destination="LVb-IJ-zGj" id="mcH-eA-qwg"/>
                         <outlet property="reloadButton" destination="4V9-WA-Bd0" id="hdD-hi-ixE"/>
                         <segue destination="Eub-Cf-3fR" kind="push" identifier="showRecentPhotos" id="ab9-lo-yhN"/>
                     </connections>
@@ -253,31 +283,12 @@
     <resources>
         <image name="photo.png" width="156" height="156"/>
     </resources>
-    <classes>
-        <class className="PhotoViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/PhotoViewController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="imageView" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="scrollView" candidateClass="UIScrollView"/>
-                <relationship kind="outlet" name="toolbar" candidateClass="UIToolbar"/>
-            </relationships>
-        </class>
-        <class className="RecentPhotosTableViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/RecentPhotosTableViewController.h"/>
-        </class>
-        <class className="TopPlacesTableViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/TopPlacesTableViewController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="reloadButton" candidateClass="UIBarButtonItem"/>
-            </relationships>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="FxU-4z-JVv"/>
+        <segue reference="ZEe-Lz-2Xw"/>
     </inferredMetricsTieBreakers>
 </document>
