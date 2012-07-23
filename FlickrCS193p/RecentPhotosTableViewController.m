@@ -9,7 +9,9 @@
 
 #import "RecentPhotosTableViewController.h"
 #import "FlickrFetcher.h"
+#import "FlickrAnnotation.h"
 #import "PhotoViewController.h"
+#import "MapViewController.h"
 
 @interface RecentPhotosTableViewController ()
 @property (nonatomic) UIImage *image;
@@ -50,10 +52,10 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSMutableArray *recentPhotosList = [[defaults objectForKey:RECENT_PHOTOS_KEY] mutableCopy];
     if (!recentPhotosList) recentPhotosList = [NSMutableArray array];
-    NSString *currentPhotoID = [photo objectForKey:@"id"];
+    NSString *currentPhotoID = [photo objectForKey:FLICKR_PHOTO_ID];
     BOOL duplicate = NO;
     for (int i = 0; i < recentPhotosList.count; i++) {
-        NSString *photoID = [[recentPhotosList objectAtIndex:i] objectForKey:@"id"];
+        NSString *photoID = [[recentPhotosList objectAtIndex:i] objectForKey:FLICKR_PHOTO_ID];
         if ([photoID isEqualToString:currentPhotoID]) duplicate = YES;
     }
     if (!duplicate) [recentPhotosList insertObject:photo atIndex:0];
@@ -106,6 +108,16 @@
     return YES;
 }
 
+- (NSArray *)mapAnnotations
+{
+    NSMutableArray *annotations = [NSMutableArray arrayWithCapacity:[self.recentPhotos count]];
+    for (NSDictionary *photo in self.recentPhotos) {
+        [annotations addObject:[FlickrAnnotation createAnnotationFor:photo objectType:@"photo"]];
+    }
+    return annotations;
+}
+
+
 #pragma mark - Table view data source
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -122,8 +134,13 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     NSDictionary *photo = [self.recentPhotos objectAtIndex:indexPath.row];
-    NSString *recentPhotoTitle = [photo valueForKey:@"title"];
-    NSString *recentPhotoDescription = [[photo valueForKey:@"description"] valueForKey:@"_content"];
+    NSString *recentPhotoTitle = [photo valueForKey:FLICKR_PHOTO_TITLE];
+    
+    // !!!!!!!!!
+    
+    NSString *recentPhotoDescription = [[photo valueForKey:FLICKR_PHOTO_DESCRIPTION] valueForKey:FLICKR_PLACE_NAME];
+    
+    // !!!!!!!!!
 
     if ([recentPhotoTitle isEqualToString:@""]) {
         if ([recentPhotoDescription isEqualToString:@""]) {
@@ -141,7 +158,7 @@
     dispatch_async(downloadQueue, ^{
         NSData *thumbData;
         UIImage *thumb;
-        NSString *photoID = [photo objectForKey:@"id"];
+        NSString *photoID = [photo objectForKey:FLICKR_PHOTO_ID];
         
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
         NSString *thumbPath = [[paths objectAtIndex:0] stringByAppendingPathComponent:@"ThumbCache"];
@@ -248,7 +265,7 @@
         dispatch_async(downloadQueue, ^{
             
             NSDictionary *photo = [[self.recentPhotos objectAtIndex:indexPath.row] mutableCopy];
-            NSString *photoID = [photo objectForKey:@"id"];
+            NSString *photoID = [photo objectForKey:FLICKR_PHOTO_ID];
             UIImage *image;
             NSData *imageData;
             
@@ -293,6 +310,12 @@
     if ([segue.identifier isEqualToString:@"showPhoto"]) {
         [segue.destinationViewController setTitle:self.selectedPhotoTitle];
         [segue.destinationViewController setPhoto:self.image];
+    }
+    if ([segue.identifier isEqualToString:@"showMapView"]) {
+        if ([segue.destinationViewController isKindOfClass:[MapViewController class]]) {
+            MapViewController *mapVC = segue.destinationViewController;
+            mapVC.annotations = [self mapAnnotations];
+        }
     }
 }
 

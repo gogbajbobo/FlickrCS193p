@@ -39,14 +39,14 @@
 
     dispatch_queue_t downloadQueue = dispatch_queue_create("flickr downloader", NULL);
     dispatch_async(downloadQueue, ^{
-        NSArray *sortDescriptors = [NSArray arrayWithObject:[[NSSortDescriptor alloc] initWithKey:@"place_url" ascending:YES]];
+        NSArray *sortDescriptors = [NSArray arrayWithObject:[[NSSortDescriptor alloc] initWithKey:FLICKR_PLACE_URL ascending:YES]];
         NSArray *topPlaces = [[FlickrFetcher topPlaces] sortedArrayUsingDescriptors:sortDescriptors];
         dispatch_async(dispatch_get_main_queue(), ^{
             self.topPlaces = topPlaces;
 //            NSLog(@"topPlaces %@", topPlaces);
             NSMutableArray *topPlacesCountries = [NSMutableArray array];
             for (int i = 0; i < self.topPlaces.count; i++) {
-                NSArray *topPlacesTitles = [[[self.topPlaces objectAtIndex:i] valueForKey:@"place_url"] componentsSeparatedByString:@"/"];
+                NSArray *topPlacesTitles = [[[self.topPlaces objectAtIndex:i] valueForKey:FLICKR_PLACE_URL] componentsSeparatedByString:@"/"];
                 if (![topPlacesCountries containsObject:[topPlacesTitles objectAtIndex:1]]) [topPlacesCountries addObject:[topPlacesTitles objectAtIndex:1]];
             }
             self.topPlacesCountries = topPlacesCountries;
@@ -56,7 +56,7 @@
                 NSString *country = [_topPlacesCountries objectAtIndex:i];
                 NSMutableArray *temp = [NSMutableArray array];
                 for (int j = 0; j < self.topPlaces.count; j++) {
-                    NSString *topPlacesTitle = [[[[self.topPlaces objectAtIndex:j] valueForKey:@"place_url"] componentsSeparatedByString:@"/"] objectAtIndex:1];
+                    NSString *topPlacesTitle = [[[[self.topPlaces objectAtIndex:j] valueForKey:FLICKR_PLACE_URL] componentsSeparatedByString:@"/"] objectAtIndex:1];
                     if ([topPlacesTitle isEqualToString:country]) [temp addObject:[self.topPlaces objectAtIndex:j]];
                 }
                 [topPlacesByCountry setObject:temp forKey:country];
@@ -91,8 +91,8 @@
 - (NSArray *)mapAnnotations
 {
     NSMutableArray *annotations = [NSMutableArray arrayWithCapacity:[self.topPlaces count]];
-    for (NSDictionary *topPlace in self.topPlaces) {
-        [annotations addObject:[FlickrAnnotation annotationForPlace:topPlace]];
+    for (NSDictionary *place in self.topPlaces) {
+        [annotations addObject:[FlickrAnnotation createAnnotationFor:place objectType:@"place"]];
     }
     return annotations;
 }
@@ -158,7 +158,7 @@
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
-    NSArray *topPlacesTitles = [[[[self.topPlacesByCountry objectForKey:[self.topPlacesCountries objectAtIndex:indexPath.section]] objectAtIndex:indexPath.row] valueForKey:@"_content"] componentsSeparatedByString:@","];
+    NSArray *topPlacesTitles = [[[[self.topPlacesByCountry objectForKey:[self.topPlacesCountries objectAtIndex:indexPath.section]] objectAtIndex:indexPath.row] valueForKey:FLICKR_PLACE_NAME] componentsSeparatedByString:@","];
     NSString *cellTitle = [topPlacesTitles objectAtIndex:0];
     
     NSMutableString *cellSubtitle;

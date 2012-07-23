@@ -9,31 +9,49 @@
 #import "FlickrAnnotation.h"
 #import "FlickrFetcher.h"
 
+@interface FlickrAnnotation()
+
+@property (nonatomic, strong) NSString *objType;
+
+@end
+
 @implementation FlickrAnnotation
 
-@synthesize place = _place;
+@synthesize objType = _objType;
+@synthesize object = _object;
 
-+ (FlickrAnnotation *)annotationForPlace:(NSDictionary *)place {
++ (FlickrAnnotation *)createAnnotationFor:(NSDictionary *)object
+                               objectType:(NSString *)objType
+{
     FlickrAnnotation *annotation = [[FlickrAnnotation alloc] init];
-    annotation.place = place;
+    annotation.object = object;
+    annotation.objType = objType;
     return annotation;
 }
 
 - (NSString *)title
 {
-    return [self.place objectForKey:FLICKR_PLACE_NAME];
+    if ([self.objType isEqualToString:@"place"]) {
+        return [self.object objectForKey:FLICKR_PLACE_NAME];
+    } else {
+        return [self.object objectForKey:FLICKR_PHOTO_TITLE];
+    }
 }
 
 - (NSString *)subtitle
 {
-    return  [self.place objectForKey:FLICKR_PHOTO_COUNT];
+    if ([self.objType isEqualToString:@"place"]) {
+        return [self.object objectForKey:FLICKR_PHOTO_COUNT];
+    } else {
+        return [[self.object valueForKey:FLICKR_PHOTO_DESCRIPTION] valueForKey:FLICKR_PLACE_NAME];
+    }
 }
 
 - (CLLocationCoordinate2D)coordinate
 {
     CLLocationCoordinate2D coordinate;
-    coordinate.latitude = [[self.place objectForKey:FLICKR_LATITUDE] doubleValue];
-    coordinate.longitude = [[self.place objectForKey:FLICKR_LONGITUDE] doubleValue];
+    coordinate.latitude = [[self.object objectForKey:FLICKR_LATITUDE] doubleValue];
+    coordinate.longitude = [[self.object objectForKey:FLICKR_LONGITUDE] doubleValue];
     return coordinate;
 }
 
