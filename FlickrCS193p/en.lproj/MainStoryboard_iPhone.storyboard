@@ -74,10 +74,11 @@
                     <navigationItem key="navigationItem" id="6Rr-dP-3sw"/>
                     <connections>
                         <outlet property="mapView" destination="lTV-Zy-Ocd" id="YQ5-yd-pQd"/>
+                        <segue destination="VFb-1h-l3x" kind="push" identifier="nextMapView" id="VTP-eC-G10"/>
                     </connections>
                 </viewController>
             </objects>
-            <point key="canvasLocation" x="-2" y="-986"/>
+            <point key="canvasLocation" x="14" y="-986"/>
         </scene>
         <!--Top Places Table View Controller - Top Places-->
         <scene sceneID="fER-zd-THf">
@@ -313,32 +314,6 @@
     <resources>
         <image name="photo.png" width="156" height="156"/>
     </resources>
-    <classes>
-        <class className="MapViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MapViewController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="mapView" candidateClass="MKMapView"/>
-            </relationships>
-        </class>
-        <class className="PhotoViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/PhotoViewController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="imageView" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="scrollView" candidateClass="UIScrollView"/>
-                <relationship kind="outlet" name="toolbar" candidateClass="UIToolbar"/>
-            </relationships>
-        </class>
-        <class className="RecentPhotosTableViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/RecentPhotosTableViewController.h"/>
-        </class>
-        <class className="TopPlacesTableViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/TopPlacesTableViewController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="mapButton" candidateClass="UIBarButtonItem"/>
-                <relationship kind="outlet" name="reloadButton" candidateClass="UIBarButtonItem"/>
-            </relationships>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
@@ -346,5 +321,6 @@
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
         <segue reference="ZEe-Lz-2Xw"/>
+        <segue reference="VTP-eC-G10"/>
     </inferredMetricsTieBreakers>
 </document>

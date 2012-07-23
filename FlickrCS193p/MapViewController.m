@@ -18,7 +18,7 @@
 @implementation MapViewController
 @synthesize mapView = _mapView;
 @synthesize annotations = _annotations;
-@synthesize delegate = _delegate;
+//@synthesize delegate = _delegate;
 
 - (void)updateMapView
 {
@@ -36,24 +36,35 @@
 {
     _annotations = annotations;
     [self updateMapView];
-    NSLog(@"setAnnotations");
 }
-//
-//- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
-//{
-//    MKAnnotationView *aView = [mapView dequeueReusableAnnotationViewWithIdentifier:@"MapVC"];
-//    if (!aView) {
-//        aView = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"MapVC"];
-//        aView.canShowCallout = YES;
+
+- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
+{
+    NSLog(@"viewForAnnotation");
+    MKPinAnnotationView *pinView = (MKPinAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:@"MapVC"];
+    if (!pinView) {
+        pinView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"MapVC"];
+        pinView.pinColor = MKPinAnnotationColorRed;
+//        pinView.animatesDrop = YES;
+        pinView.canShowCallout = YES;
+        pinView.rightCalloutAccessoryView = [[UIControl alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
 //        aView.leftCalloutAccessoryView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
-//    }
-//    aView.annotation = annotation;
+    }
+    pinView.annotation = annotation;
 //    [(UIImageView *)aView.leftCalloutAccessoryView setImage:nil];
-//    return aView;
-//}
-//
+    return pinView;
+//    return nil;
+}
+
+- (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control
+{
+    NSLog(@"calloutAccessoryControlTapped");
+    [self performSegueWithIdentifier:@"nextMapView" sender:self];
+}
+
 //- (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)aView
 //{
+//    NSLog(@"didSelectAnnotationView");
 //    UIImage *image = [self.delegate mapViewController:self imageForAnnotation:aView.annotation];
 //    [(UIImageView *)aView.leftCalloutAccessoryView setImage:image];
 //}
@@ -61,13 +72,14 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-//    self.mapView.delegate = self;
+    self.mapView.delegate = self;
 	// Do any additional setup after loading the view.
 }
 
 - (void)viewDidUnload
 {
-//    [self setMapView:nil];
+    self.mapView.delegate = nil;
+    [self setMapView:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
@@ -75,6 +87,13 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return YES;
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.identifier isEqualToString:@"nextMapView"]) {
+        NSLog(@"prepareForSegue nextMapView");
+    }
 }
 
 @end
