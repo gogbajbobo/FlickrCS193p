@@ -182,7 +182,13 @@
                             <outlet property="delegate" destination="Eub-Cf-3fR" id="uKM-qd-HtB"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="2ZQ-j5-BQd"/>
+                    <navigationItem key="navigationItem" id="2ZQ-j5-BQd">
+                        <barButtonItem key="rightBarButtonItem" title="Map" id="RcW-Aw-aHU">
+                            <connections>
+                                <segue destination="VFb-1h-l3x" kind="push" identifier="showMapView" id="cre-8c-289"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <segue destination="u8n-kE-TJ4" kind="push" identifier="showPhoto" id="ZEe-Lz-2Xw"/>
                     </connections>
@@ -279,10 +285,60 @@
             </objects>
             <point key="canvasLocation" x="-420" y="234"/>
         </scene>
+        <!--Map View Controller-->
+        <scene sceneID="X67-H4-GWi">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="nN8-q6-gpc" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewController id="VFb-1h-l3x" customClass="MapViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="RFi-xL-g9l">
+                        <rect key="frame" x="0.0" y="64" width="320" height="367"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" id="haP-pm-GbO">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="367"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            </mapView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="GJC-ZE-aJM"/>
+                    <connections>
+                        <outlet property="mapView" destination="haP-pm-GbO" id="Ye2-Np-jdu"/>
+                    </connections>
+                </viewController>
+            </objects>
+            <point key="canvasLocation" x="406" y="-986"/>
+        </scene>
     </scenes>
     <resources>
         <image name="photo.png" width="156" height="156"/>
     </resources>
+    <classes>
+        <class className="MapViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/MapViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="mapView" candidateClass="MKMapView"/>
+            </relationships>
+        </class>
+        <class className="PhotoViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/PhotoViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="imageView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="scrollView" candidateClass="UIScrollView"/>
+                <relationship kind="outlet" name="toolbar" candidateClass="UIToolbar"/>
+            </relationships>
+        </class>
+        <class className="RecentPhotosTableViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/RecentPhotosTableViewController.h"/>
+        </class>
+        <class className="TopPlacesTableViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/TopPlacesTableViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="mapButton" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="reloadButton" candidateClass="UIBarButtonItem"/>
+            </relationships>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

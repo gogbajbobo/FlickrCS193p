@@ -239,7 +239,10 @@
 
         UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
         [spinner startAnimating];
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:spinner];
+        UIBarButtonItem *backButton = self.navigationItem.leftBarButtonItem;
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:spinner];
+        
+        
         
         dispatch_queue_t downloadQueue = dispatch_queue_create("flickr downloader", NULL);
         dispatch_async(downloadQueue, ^{
@@ -271,6 +274,7 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.image = image;
                 [spinner stopAnimating];
+                self.navigationItem.leftBarButtonItem = backButton;
                 if ([self splitViewPhotoViewController]) {
                     [self splitViewPhotoViewController].title = self.selectedPhotoTitle;
                     [self splitViewPhotoViewController].photo = image;

@@ -192,6 +192,7 @@
         NSArray *recentPhotosFromPlace = [FlickrFetcher photosInPlace:[[self.topPlacesByCountry objectForKey:[self.topPlacesCountries objectAtIndex:indexPath.section]] objectAtIndex:indexPath.row] maxResults:50];
         dispatch_async(dispatch_get_main_queue(), ^{
             self.recentPhotosFromPlace = recentPhotosFromPlace;
+            [spinner stopAnimating];
             self.navigationItem.leftBarButtonItem = reloadButton;
             [self performSegueWithIdentifier:@"showRecentPhotos" sender:self];
         });

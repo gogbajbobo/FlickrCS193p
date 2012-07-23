@@ -21,12 +21,12 @@
 
 - (NSString *)title
 {
-    return [self.place objectForKey:FLICKR_PHOTO_TITLE];
+    return [self.place objectForKey:FLICKR_PLACE_NAME];
 }
 
 - (NSString *)subtitle
 {
-    return  [self.place objectForKey:FLICKR_PHOTO_OWNER];
+    return  [self.place objectForKey:FLICKR_PHOTO_COUNT];
 }
 
 - (CLLocationCoordinate2D)coordinate
