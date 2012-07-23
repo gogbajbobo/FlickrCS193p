@@ -9,6 +9,8 @@
 #import "TopPlacesTableViewController.h"
 #import "FlickrFetcher.h"
 #import "RecentPhotosTableViewController.h"
+#import "MapViewController.h"
+#import "FlickrAnnotation.h"
 
 @interface TopPlacesTableViewController ()
 @property (nonatomic, strong) NSArray *topPlaces;
@@ -72,6 +74,28 @@
     [self loadTopPlacesList];
 }
 
+- (void)setTopPlaces:(NSArray *)topPlaces
+{
+    if (_topPlaces != topPlaces) {
+        _topPlaces = topPlaces;
+        [self updateMapViewAnnotations]; 
+//        [self updateSplitViewDetail];
+//        if (self.tableView.window) [self.tableView reloadData];
+    }
+}
+
+- (void)updateMapViewAnnotations {
+
+}
+
+- (NSArray *)mapAnnotations
+{
+    NSMutableArray *annotations = [NSMutableArray arrayWithCapacity:[self.topPlaces count]];
+    for (NSDictionary *topPlace in self.topPlaces) {
+        [annotations addObject:[FlickrAnnotation annotationForPlace:topPlace]];
+    }
+    return annotations;
+}
 
 - (NSArray *)recentPhotos:(int)rowOfPlace
 {
@@ -181,6 +205,12 @@
         [segue.destinationViewController setRecentPhotos:[self.recentPhotosFromPlace mutableCopy]];
         [segue.destinationViewController setPhotosFromPlace:YES];
         [segue.destinationViewController setTitle:self.selectedPlace];
+    }
+    if ([segue.identifier isEqualToString:@"showMapView"]) {
+        if ([segue.destinationViewController isKindOfClass:[MapViewController class]]) {
+            MapViewController *mapVC = segue.destinationViewController;
+            mapVC.annotations = [self mapAnnotations];
+        }
     }
 }
 

@@ -124,7 +124,7 @@
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Map" id="LVb-IJ-zGj">
                             <connections>
-                                <segue destination="cKq-xB-zx5" kind="push" id="R6w-Bh-c0e"/>
+                                <segue destination="cKq-xB-zx5" kind="push" identifier="showMapView" id="R6w-Bh-c0e"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>

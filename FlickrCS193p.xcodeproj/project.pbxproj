@@ -24,6 +24,7 @@
 		2CE4713115BC4F4400B092DB /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE4713015BC4F4400B092DB /* MapViewController.m */; };
 		2CE4713315BC518000B092DB /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE4713215BC518000B092DB /* MapKit.framework */; };
 		2CE4713515BC519300B092DB /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE4713415BC519200B092DB /* CoreLocation.framework */; };
+		2CE4713B15BD412300B092DB /* FlickrAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE4713A15BD412200B092DB /* FlickrAnnotation.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -56,6 +57,8 @@
 		2CE4713015BC4F4400B092DB /* MapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapViewController.m; sourceTree = "<group>"; };
 		2CE4713215BC518000B092DB /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		2CE4713415BC519200B092DB /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		2CE4713915BD412200B092DB /* FlickrAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlickrAnnotation.h; sourceTree = "<group>"; };
+		2CE4713A15BD412200B092DB /* FlickrAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FlickrAnnotation.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +109,8 @@
 		2C39142D1562903B0082277A /* FlickrCS193p */ = {
 			isa = PBXGroup;
 			children = (
+				2CE4713915BD412200B092DB /* FlickrAnnotation.h */,
+				2CE4713A15BD412200B092DB /* FlickrAnnotation.m */,
 				2CE4712F15BC4F4400B092DB /* MapViewController.h */,
 				2CE4713015BC4F4400B092DB /* MapViewController.m */,
 				2C1B5EC01595E236006F3E8A /* photo.png */,
@@ -215,6 +220,7 @@
 				2C86D6BA1566690E00458CBC /* PhotoViewController.m in Sources */,
 				2C86D6CA156AAE9900458CBC /* SplitViewDelegateUITabBarController.m in Sources */,
 				2CE4713115BC4F4400B092DB /* MapViewController.m in Sources */,
+				2CE4713B15BD412300B092DB /* FlickrAnnotation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
