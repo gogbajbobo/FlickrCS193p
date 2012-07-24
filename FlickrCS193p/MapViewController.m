@@ -14,6 +14,7 @@
 @interface MapViewController () <MKMapViewDelegate>
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
 @property (strong, nonatomic) NSDictionary *selectedObject;
+@property (strong, nonatomic) NSString *nextTitle;
 
 @end
 
@@ -21,6 +22,7 @@
 @synthesize mapView = _mapView;
 @synthesize annotations = _annotations;
 @synthesize selectedObject = _selectedObject;
+@synthesize nextTitle = _nextTitle;
 //@synthesize delegate = _delegate;
 
 - (void)updateMapView
@@ -60,6 +62,7 @@
 {
     FlickrAnnotation *flickrAnnotation = view.annotation;
     self.selectedObject = flickrAnnotation.object;
+    self.nextTitle = flickrAnnotation.title;
     if ([flickrAnnotation.objType isEqualToString:@"place"]) {
         [self performSegueWithIdentifier:@"nextMapView" sender:self];        
     } else {
@@ -119,9 +122,11 @@
             });
         });
         dispatch_release(downloadQueue);
+        [segue.destinationViewController setTitle:self.nextTitle];
         
     } else if ([segue.identifier isEqualToString:@"showPhotoView"]) {
         NSLog(@"prepareForSegue showPhotoView");
+        [segue.destinationViewController setTitle:self.nextTitle];
     }
 }
 
