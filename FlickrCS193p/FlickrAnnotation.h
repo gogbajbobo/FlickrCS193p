@@ -15,5 +15,6 @@
                                objectType:(NSString *)objType;
 
 @property (nonatomic, strong) NSDictionary *object;
+@property (nonatomic, strong) NSString *objType;
 
 @end

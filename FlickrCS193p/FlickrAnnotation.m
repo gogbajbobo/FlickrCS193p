@@ -11,8 +11,6 @@
 
 @interface FlickrAnnotation()
 
-@property (nonatomic, strong) NSString *objType;
-
 @end
 
 @implementation FlickrAnnotation

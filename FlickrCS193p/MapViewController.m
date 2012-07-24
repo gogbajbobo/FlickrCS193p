@@ -8,16 +8,19 @@
 
 #import "MapViewController.h"
 #import <MapKit/MapKit.h>
-
+#import "FlickrAnnotation.h"
+#import "FlickrFetcher.h"
 
 @interface MapViewController () <MKMapViewDelegate>
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
+@property (strong, nonatomic) NSDictionary *selectedObject;
 
 @end
 
 @implementation MapViewController
 @synthesize mapView = _mapView;
 @synthesize annotations = _annotations;
+@synthesize selectedObject = _selectedObject;
 //@synthesize delegate = _delegate;
 
 - (void)updateMapView
@@ -40,7 +43,7 @@
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
 {
-    NSLog(@"viewForAnnotation");
+//    NSLog(@"viewForAnnotation");
     MKPinAnnotationView *pinView = (MKPinAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:@"MapVC"];
     if (!pinView) {
         pinView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"MapVC"];
@@ -48,18 +51,20 @@
 //        pinView.animatesDrop = YES;
         pinView.canShowCallout = YES;
         pinView.rightCalloutAccessoryView = [[UIControl alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
-//        aView.leftCalloutAccessoryView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
     }
     pinView.annotation = annotation;
-//    [(UIImageView *)aView.leftCalloutAccessoryView setImage:nil];
     return pinView;
-//    return nil;
 }
 
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control
 {
-    NSLog(@"calloutAccessoryControlTapped");
-    [self performSegueWithIdentifier:@"nextMapView" sender:self];
+    FlickrAnnotation *flickrAnnotation = view.annotation;
+    self.selectedObject = flickrAnnotation.object;
+    if ([flickrAnnotation.objType isEqualToString:@"place"]) {
+        [self performSegueWithIdentifier:@"nextMapView" sender:self];        
+    } else {
+        [self performSegueWithIdentifier:@"showPhotoView" sender:self];
+    }
 }
 
 //- (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)aView
@@ -89,10 +94,34 @@
     return YES;
 }
 
+- (NSArray *)mapAnnotationsFor:(NSArray *)photos
+{
+    NSMutableArray *annotations = [NSMutableArray arrayWithCapacity:[photos count]];
+    for (NSDictionary *photo in photos) {
+        [annotations addObject:[FlickrAnnotation createAnnotationFor:photo objectType:@"photo"]];
+    }
+    return annotations;
+}
+
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([segue.identifier isEqualToString:@"nextMapView"]) {
+        
         NSLog(@"prepareForSegue nextMapView");
+        dispatch_queue_t downloadQueue = dispatch_queue_create("flickr downloader", NULL);
+        dispatch_async(downloadQueue, ^{
+            NSArray *recentPhotosFromPlace = [FlickrFetcher photosInPlace:self.selectedObject maxResults:50];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if ([segue.destinationViewController isKindOfClass:[MapViewController class]]) {
+                    MapViewController *mapVC = segue.destinationViewController;
+                    mapVC.annotations = [self mapAnnotationsFor:recentPhotosFromPlace];
+                }
+            });
+        });
+        dispatch_release(downloadQueue);
+        
+    } else if ([segue.identifier isEqualToString:@"showPhotoView"]) {
+        NSLog(@"prepareForSegue showPhotoView");
     }
 }
 

@@ -305,6 +305,7 @@
                     <navigationItem key="navigationItem" id="GJC-ZE-aJM"/>
                     <connections>
                         <outlet property="mapView" destination="haP-pm-GbO" id="Ye2-Np-jdu"/>
+                        <segue destination="u8n-kE-TJ4" kind="push" identifier="showPhotoView" id="EJR-kE-8g8"/>
                     </connections>
                 </viewController>
             </objects>
@@ -320,7 +321,7 @@
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="ZEe-Lz-2Xw"/>
         <segue reference="VTP-eC-G10"/>
+        <segue reference="EJR-kE-8g8"/>
     </inferredMetricsTieBreakers>
 </document>
