@@ -11,6 +11,7 @@
 @interface FlickrCache : NSObject
 
 + (UIImage *)checkingCacheForThumb:(NSDictionary *)photo;
++ (UIImage *)checkingCacheForPhoto:(NSDictionary *)photo;
 + (void)checkNumberOfThumbsInCache;
 
 @end
