@@ -12,6 +12,7 @@
 #import "FlickrAnnotation.h"
 #import "PhotoViewController.h"
 #import "MapViewController.h"
+#import "FlickrCache.h"
 
 @interface RecentPhotosTableViewController ()
 @property (nonatomic) UIImage *image;
@@ -135,12 +136,7 @@
     }
     NSDictionary *photo = [self.recentPhotos objectAtIndex:indexPath.row];
     NSString *recentPhotoTitle = [photo valueForKey:FLICKR_PHOTO_TITLE];
-    
-    // !!!!!!!!!
-    
     NSString *recentPhotoDescription = [[photo valueForKey:FLICKR_PHOTO_DESCRIPTION] valueForKey:FLICKR_PLACE_NAME];
-    
-    // !!!!!!!!!
 
     if ([recentPhotoTitle isEqualToString:@""]) {
         if ([recentPhotoDescription isEqualToString:@""]) {
@@ -156,36 +152,13 @@
     
     dispatch_queue_t downloadQueue = dispatch_queue_create("flickr downloader", NULL);
     dispatch_async(downloadQueue, ^{
-        NSData *thumbData;
-        UIImage *thumb;
-        NSString *photoID = [photo objectForKey:FLICKR_PHOTO_ID];
-        
-        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-        NSString *thumbPath = [[paths objectAtIndex:0] stringByAppendingPathComponent:@"ThumbCache"];
-        if (![[NSFileManager defaultManager] fileExistsAtPath:thumbPath]) {
-            [[NSFileManager defaultManager] createDirectoryAtPath:thumbPath withIntermediateDirectories:NO attributes:nil error:nil];
-        }
-        NSString *filePath = [thumbPath stringByAppendingPathComponent:photoID];
-        if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
-            thumb = [UIImage imageWithContentsOfFile:filePath];
-        } else {
-            thumbData = [NSData dataWithContentsOfURL:[FlickrFetcher urlForPhoto:photo format:FlickrPhotoFormatSquare]];
-            if (!thumbData) {
-                thumb = cell.imageView.image;
-            } else {
-                thumb = [UIImage imageWithData:thumbData];
-            }
-            [[NSFileManager defaultManager] createFileAtPath:filePath
-                                                    contents:thumbData
-                                                  attributes:nil];
-        }
-
+        UIImage *thumb = [FlickrCache checkingCacheForThumb:photo];
         dispatch_async(dispatch_get_main_queue(), ^{
             dispatch_queue_t cacheCheckingQueue = dispatch_queue_create("cache cheking", NULL);
             dispatch_async(cacheCheckingQueue, ^{
                 if (!self.checkingCache) {
                     self.checkingCache = YES;
-                    [self checkNumberOfFilesInCache:thumbPath];
+                    [FlickrCache checkNumberOfThumbsInCache];
                 }
                 self.checkingCache = NO;
             });

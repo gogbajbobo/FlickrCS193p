@@ -25,6 +25,7 @@
 		2CE4713315BC518000B092DB /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE4713215BC518000B092DB /* MapKit.framework */; };
 		2CE4713515BC519300B092DB /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE4713415BC519200B092DB /* CoreLocation.framework */; };
 		2CE4713B15BD412300B092DB /* FlickrAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE4713A15BD412200B092DB /* FlickrAnnotation.m */; };
+		2CE4714A15BF13A400B092DB /* FlickrCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE4714915BF13A300B092DB /* FlickrCache.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -59,6 +60,8 @@
 		2CE4713415BC519200B092DB /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		2CE4713915BD412200B092DB /* FlickrAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlickrAnnotation.h; sourceTree = "<group>"; };
 		2CE4713A15BD412200B092DB /* FlickrAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FlickrAnnotation.m; sourceTree = "<group>"; };
+		2CE4714815BF13A300B092DB /* FlickrCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlickrCache.h; sourceTree = "<group>"; };
+		2CE4714915BF13A300B092DB /* FlickrCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FlickrCache.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,6 +122,8 @@
 				2C391447156290860082277A /* FlickrAPIKey.h */,
 				2C391448156290860082277A /* FlickrFetcher.h */,
 				2C391449156290860082277A /* FlickrFetcher.m */,
+				2CE4714815BF13A300B092DB /* FlickrCache.h */,
+				2CE4714915BF13A300B092DB /* FlickrCache.m */,
 				2C3914391562903B0082277A /* MainStoryboard_iPhone.storyboard */,
 				2C39143C1562903B0082277A /* MainStoryboard_iPad.storyboard */,
 				2C86D6C8156AAE9800458CBC /* SplitViewDelegateUITabBarController.h */,
@@ -221,6 +226,7 @@
 				2C86D6CA156AAE9900458CBC /* SplitViewDelegateUITabBarController.m in Sources */,
 				2CE4713115BC4F4400B092DB /* MapViewController.m in Sources */,
 				2CE4713B15BD412300B092DB /* FlickrAnnotation.m in Sources */,
+				2CE4714A15BF13A400B092DB /* FlickrCache.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
