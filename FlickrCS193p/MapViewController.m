@@ -107,7 +107,7 @@
 {
     if ([segue.identifier isEqualToString:@"nextMapView"]) {
         
-        NSLog(@"prepareForSegue nextMapView");
+//        NSLog(@"prepareForSegue nextMapView");
         dispatch_queue_t downloadQueue = dispatch_queue_create("flickr downloader", NULL);
         dispatch_async(downloadQueue, ^{
             NSArray *recentPhotosFromPlace = [FlickrFetcher photosInPlace:self.selectedObject maxResults:50];
