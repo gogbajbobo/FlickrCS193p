@@ -10,11 +10,14 @@
 #import <MapKit/MapKit.h>
 #import "FlickrAnnotation.h"
 #import "FlickrFetcher.h"
+#import "FlickrCache.h"
+#import "PhotoViewController.h"
 
 @interface MapViewController () <MKMapViewDelegate>
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
 @property (strong, nonatomic) NSDictionary *selectedObject;
 @property (strong, nonatomic) NSString *nextTitle;
+@property (strong, nonatomic) UIImage *image;
 
 @end
 
@@ -23,7 +26,12 @@
 @synthesize annotations = _annotations;
 @synthesize selectedObject = _selectedObject;
 @synthesize nextTitle = _nextTitle;
+@synthesize image = _image;
 //@synthesize delegate = _delegate;
+
+#define RECENT_PHOTOS_KEY @"Flickr.recentPhotos"
+#define MAX_NUMBER_OF_PHOTOS 5
+
 
 - (void)updateMapView
 {
@@ -41,6 +49,28 @@
 {
     _annotations = annotations;
     [self updateMapView];
+}
+
+- (void)addPhotoToRecentPhotosList:(NSDictionary *)photo {
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSMutableArray *recentPhotosList = [[defaults objectForKey:RECENT_PHOTOS_KEY] mutableCopy];
+    if (!recentPhotosList) recentPhotosList = [NSMutableArray array];
+    NSString *currentPhotoID = [photo objectForKey:FLICKR_PHOTO_ID];
+    BOOL duplicate = NO;
+    for (int i = 0; i < recentPhotosList.count; i++) {
+        NSString *photoID = [[recentPhotosList objectAtIndex:i] objectForKey:FLICKR_PHOTO_ID];
+        if ([photoID isEqualToString:currentPhotoID]) duplicate = YES;
+    }
+    if (!duplicate) [recentPhotosList insertObject:photo atIndex:0];
+    if (recentPhotosList.count > MAX_NUMBER_OF_PHOTOS) {
+        NSRange range;
+        range.location = MAX_NUMBER_OF_PHOTOS;
+        range.length = recentPhotosList.count - range.location;
+        [recentPhotosList removeObjectsInRange:range];
+    }
+    [defaults setObject:recentPhotosList forKey:RECENT_PHOTOS_KEY];
+    [defaults synchronize];
 }
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
@@ -66,7 +96,19 @@
     if ([flickrAnnotation.objType isEqualToString:@"place"]) {
         [self performSegueWithIdentifier:@"nextMapView" sender:self];        
     } else {
-        [self performSegueWithIdentifier:@"showPhotoView" sender:self];
+        UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        [spinner startAnimating];
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:spinner];
+
+        dispatch_queue_t downloadQueue = dispatch_queue_create("flickr downloader", NULL);
+        dispatch_async(downloadQueue, ^{
+            self.image = [FlickrCache checkingCacheForPhoto:self.selectedObject];
+            [self addPhotoToRecentPhotosList:self.selectedObject];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [spinner stopAnimating];
+                [self performSegueWithIdentifier:@"showPhotoView" sender:self];
+            });
+        });
     }
 }
 
@@ -106,6 +148,10 @@
     return annotations;
 }
 
+//- (UIImage *)getImageForPhoto:(NSDictionary *)photo {
+//    
+//}
+
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([segue.identifier isEqualToString:@"nextMapView"]) {
@@ -126,7 +172,9 @@
         
     } else if ([segue.identifier isEqualToString:@"showPhotoView"]) {
         NSLog(@"prepareForSegue showPhotoView");
+        [segue.destinationViewController setPhoto:self.image];
         [segue.destinationViewController setTitle:self.nextTitle];
+        
     }
 }
 
