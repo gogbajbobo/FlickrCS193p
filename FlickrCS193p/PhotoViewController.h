@@ -10,6 +10,6 @@
 #import "SplitViewBarButtonItemPresenter.h"
 
 @interface PhotoViewController : UIViewController <SplitViewBarButtonItemPresenter>
-@property (nonatomic, strong) UIImage *photo;
+@property (nonatomic, weak) UIImage *photo;
 
 @end

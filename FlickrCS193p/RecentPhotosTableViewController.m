@@ -15,7 +15,7 @@
 #import "FlickrCache.h"
 
 @interface RecentPhotosTableViewController ()
-@property (nonatomic) UIImage *image;
+@property (weak, nonatomic) UIImage *image;
 @property (nonatomic) NSString *selectedPhotoTitle;
 @property (nonatomic) BOOL rowDidSelected;
 @property (nonatomic) BOOL refreshRecentPhotoList;
