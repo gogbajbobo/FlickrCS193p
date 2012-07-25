@@ -20,6 +20,7 @@
 @property (strong, nonatomic) UIImage *image;
 @property (nonatomic) CLLocationCoordinate2D center;
 @property (nonatomic) MKCoordinateSpan span;
+@property (nonatomic) BOOL checkingCache;
 
 @end
 
@@ -31,6 +32,7 @@
 @synthesize image = _image;
 @synthesize center = _center;
 @synthesize span = _span;
+@synthesize checkingCache = _checkingCache;
 //@synthesize delegate = _delegate;
 
 #define RECENT_PHOTOS_KEY @"Flickr.recentPhotos"
@@ -65,17 +67,17 @@
         if (annotation.coordinate.latitude < minLat) minLat = annotation.coordinate.latitude;
 //        NSLog(@"maxLon %f minLon %f maxLat %f minLat %f", maxLon, minLon, maxLat, minLat);
     }
-    NSLog(@"maxLon %f minLon %f maxLat %f minLat %f", maxLon, minLon, maxLat, minLat);
+//    NSLog(@"maxLon %f minLon %f maxLat %f minLat %f", maxLon, minLon, maxLat, minLat);
     CLLocationCoordinate2D center;
     center.longitude = (maxLon + minLon)/2;
     center.latitude = (maxLat + maxLat)/2;
     self.center = center;
-    NSLog(@"center %f %f",center.longitude, center.latitude);
+//    NSLog(@"center %f %f",center.longitude, center.latitude);
     MKCoordinateSpan span;
     span.longitudeDelta = maxLon - minLon;
     span.latitudeDelta = maxLat - minLat;
     self.span = span;
-    NSLog(@"span %f %f",span.longitudeDelta, span.latitudeDelta);
+//    NSLog(@"span %f %f",span.longitudeDelta, span.latitudeDelta);
     [self updateMapView];
 }
 
@@ -111,6 +113,25 @@
 //        pinView.animatesDrop = YES;
         pinView.canShowCallout = YES;
         pinView.rightCalloutAccessoryView = [[UIControl alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
+        pinView.leftCalloutAccessoryView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
+        dispatch_queue_t downloadQueue = dispatch_queue_create("flickr downloader", NULL);
+        dispatch_async(downloadQueue, ^{
+            FlickrAnnotation *flickrAnnotation = pinView.annotation;
+            UIImage *thumb = [FlickrCache checkingCacheForThumb:flickrAnnotation.object];
+            [(UIImageView *)pinView.leftCalloutAccessoryView setImage:thumb];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                dispatch_queue_t cacheCheckingQueue = dispatch_queue_create("cache cheking", NULL);
+                dispatch_async(cacheCheckingQueue, ^{
+                    if (!self.checkingCache) {
+                        self.checkingCache = YES;
+                        [FlickrCache checkNumberOfThumbsInCache];
+                    }
+                    self.checkingCache = NO;
+                });
+                dispatch_release(cacheCheckingQueue);
+            });
+        });
+        dispatch_release(downloadQueue);
     }
     pinView.annotation = annotation;
     return pinView;
@@ -199,7 +220,7 @@
         [segue.destinationViewController setTitle:self.nextTitle];
         
     } else if ([segue.identifier isEqualToString:@"showPhotoView"]) {
-        NSLog(@"prepareForSegue showPhotoView");
+//        NSLog(@"prepareForSegue showPhotoView");
         [segue.destinationViewController setPhoto:self.image];
         [segue.destinationViewController setTitle:self.nextTitle];
         
