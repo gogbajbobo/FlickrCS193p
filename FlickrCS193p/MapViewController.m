@@ -18,6 +18,8 @@
 @property (strong, nonatomic) NSDictionary *selectedObject;
 @property (strong, nonatomic) NSString *nextTitle;
 @property (strong, nonatomic) UIImage *image;
+@property (nonatomic) CLLocationCoordinate2D center;
+@property (nonatomic) MKCoordinateSpan span;
 
 @end
 
@@ -27,6 +29,8 @@
 @synthesize selectedObject = _selectedObject;
 @synthesize nextTitle = _nextTitle;
 @synthesize image = _image;
+@synthesize center = _center;
+@synthesize span = _span;
 //@synthesize delegate = _delegate;
 
 #define RECENT_PHOTOS_KEY @"Flickr.recentPhotos"
@@ -37,6 +41,7 @@
 {
     if (self.mapView.annotations) [self.mapView removeAnnotations:self.mapView.annotations];
     if (self.annotations) [self.mapView addAnnotations:self.annotations];
+    self.mapView.region = MKCoordinateRegionMake(self.center, self.span);
 }
 
 - (void)setMapView:(MKMapView *)mapView
@@ -48,6 +53,29 @@
 - (void)setAnnotations:(NSArray *)annotations
 {
     _annotations = annotations;
+    FlickrAnnotation *firstAnnotation = [annotations objectAtIndex:0];
+    double maxLon = firstAnnotation.coordinate.longitude;
+    double minLon = firstAnnotation.coordinate.longitude;
+    double maxLat = firstAnnotation.coordinate.latitude;
+    double minLat = firstAnnotation.coordinate.latitude;
+    for (FlickrAnnotation *annotation in annotations) {
+        if (annotation.coordinate.longitude > maxLon) maxLon = annotation.coordinate.longitude;
+        if (annotation.coordinate.longitude < minLon) minLon = annotation.coordinate.longitude;
+        if (annotation.coordinate.latitude > maxLat) maxLat = annotation.coordinate.latitude;
+        if (annotation.coordinate.latitude < minLat) minLat = annotation.coordinate.latitude;
+//        NSLog(@"maxLon %f minLon %f maxLat %f minLat %f", maxLon, minLon, maxLat, minLat);
+    }
+    NSLog(@"maxLon %f minLon %f maxLat %f minLat %f", maxLon, minLon, maxLat, minLat);
+    CLLocationCoordinate2D center;
+    center.longitude = (maxLon + minLon)/2;
+    center.latitude = (maxLat + maxLat)/2;
+    self.center = center;
+    NSLog(@"center %f %f",center.longitude, center.latitude);
+    MKCoordinateSpan span;
+    span.longitudeDelta = maxLon - minLon;
+    span.latitudeDelta = maxLat - minLat;
+    self.span = span;
+    NSLog(@"span %f %f",span.longitudeDelta, span.latitudeDelta);
     [self updateMapView];
 }
 
