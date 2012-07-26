@@ -21,6 +21,7 @@
 @synthesize splitViewBarButtonItem = _splitViewBarButtonItem;
 @synthesize toolbar = _toolbar;
 @synthesize photo = _photo;
+@synthesize photoTitle = _photoTitle;
 
 
 - (void)setSplitViewBarButtonItem:(UIBarButtonItem *)splitViewBarButtonItem
@@ -102,6 +103,10 @@
 {
     [self setImageView:nil];
     [self setScrollView:nil];
+    [self setTitle:nil];
+    [self setPhotoTitle:nil];
+    [self setPhotoTitle:nil];
+    [self setPhotoTitle:nil];
     [super viewDidUnload];
 }
 

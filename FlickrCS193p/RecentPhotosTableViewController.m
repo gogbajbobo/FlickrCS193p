@@ -240,7 +240,7 @@
                 [spinner stopAnimating];
                 self.navigationItem.leftBarButtonItem = backButton;
                 if ([self splitViewPhotoViewController]) {
-                    [self splitViewPhotoViewController].title = self.selectedPhotoTitle;
+                    [[self splitViewPhotoViewController].photoTitle setText:self.selectedPhotoTitle];
                     [self splitViewPhotoViewController].photo = image;
                 } else {
                     [self performSegueWithIdentifier:@"showPhoto" sender:self];

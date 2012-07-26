@@ -182,7 +182,7 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 [spinner stopAnimating];
                 if ([self splitViewPhotoViewController]) {
-                    [self splitViewPhotoViewController].title = self.nextTitle;
+                    [[self splitViewPhotoViewController].photoTitle setText:self.nextTitle];
                     [self splitViewPhotoViewController].photo = self.image;
                 } else {
                     [self performSegueWithIdentifier:@"showPhotoView" sender:self];

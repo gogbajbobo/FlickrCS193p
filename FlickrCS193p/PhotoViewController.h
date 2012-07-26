@@ -11,5 +11,6 @@
 
 @interface PhotoViewController : UIViewController <SplitViewBarButtonItemPresenter>
 @property (nonatomic, weak) UIImage *photo;
+@property (weak, nonatomic) IBOutlet UILabel *photoTitle;
 
 @end
