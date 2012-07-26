@@ -15,7 +15,7 @@
 
 @interface MapViewController () <MKMapViewDelegate>
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
-@property (weak, nonatomic) IBOutlet UISegmentedControl *MapSwitch;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *mapSwitch;
 @property (strong, nonatomic) NSDictionary *selectedObject;
 @property (strong, nonatomic) NSString *nextTitle;
 @property (strong, nonatomic) UIImage *image;
@@ -27,7 +27,7 @@
 
 @implementation MapViewController
 @synthesize mapView = _mapView;
-@synthesize MapSwitch = _MapSwitch;
+@synthesize mapSwitch = _mapSwitch;
 @synthesize annotations = _annotations;
 @synthesize selectedObject = _selectedObject;
 @synthesize nextTitle = _nextTitle;
@@ -40,6 +40,21 @@
 #define RECENT_PHOTOS_KEY @"Flickr.recentPhotos"
 #define MAX_NUMBER_OF_PHOTOS 5
 
+
+- (IBAction)mapSwitchPressed:(id)sender {
+    UISegmentedControl *mapSwitch;
+    if ([sender isKindOfClass:[UISegmentedControl class]]) {
+        mapSwitch = sender;
+    }
+//    NSLog(@"MapSwitchValue %d", mapSwitch.selectedSegmentIndex);
+    if (mapSwitch.selectedSegmentIndex == 0) {
+        self.mapView.mapType = MKMapTypeStandard;
+    } else if (mapSwitch.selectedSegmentIndex == 1) {
+        self.mapView.mapType = MKMapTypeSatellite;        
+    } else if (mapSwitch.selectedSegmentIndex == 2) {
+        self.mapView.mapType = MKMapTypeHybrid;
+    }
+}
 
 - (void)updateMapView
 {
