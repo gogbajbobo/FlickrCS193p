@@ -87,7 +87,7 @@
 //    NSLog(@"maxLon %f minLon %f maxLat %f minLat %f", maxLon, minLon, maxLat, minLat);
     CLLocationCoordinate2D center;
     center.longitude = (maxLon + minLon)/2;
-    center.latitude = (maxLat + maxLat)/2;
+    center.latitude = (maxLat + minLat)/2;
     self.center = center;
 //    NSLog(@"center %f %f",center.longitude, center.latitude);
     MKCoordinateSpan span;
