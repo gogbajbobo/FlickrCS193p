@@ -15,6 +15,7 @@
 
 @interface MapViewController () <MKMapViewDelegate>
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *MapSwitch;
 @property (strong, nonatomic) NSDictionary *selectedObject;
 @property (strong, nonatomic) NSString *nextTitle;
 @property (strong, nonatomic) UIImage *image;
@@ -26,6 +27,7 @@
 
 @implementation MapViewController
 @synthesize mapView = _mapView;
+@synthesize MapSwitch = _MapSwitch;
 @synthesize annotations = _annotations;
 @synthesize selectedObject = _selectedObject;
 @synthesize nextTitle = _nextTitle;
@@ -179,6 +181,7 @@
 {
     self.mapView.delegate = nil;
     [self setMapView:nil];
+    [self setMapSwitch:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }

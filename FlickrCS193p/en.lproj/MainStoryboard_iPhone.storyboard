@@ -74,11 +74,21 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="367"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             </mapView>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" id="Xxu-tM-XcV">
+                                <rect key="frame" x="20" y="318" width="280" height="30"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <segments>
+                                    <segment title="Map"/>
+                                    <segment title="Sattelite"/>
+                                    <segment title="Hybrid"/>
+                                </segments>
+                            </segmentedControl>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" id="6Rr-dP-3sw"/>
                     <connections>
+                        <outlet property="MapSwitch" destination="Xxu-tM-XcV" id="2mx-ZQ-5bO"/>
                         <outlet property="mapView" destination="lTV-Zy-Ocd" id="YQ5-yd-pQd"/>
                         <segue destination="VFb-1h-l3x" kind="push" identifier="nextMapView" id="VTP-eC-G10"/>
                     </connections>
@@ -305,11 +315,21 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="367"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             </mapView>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" id="XeC-UF-KsG">
+                                <rect key="frame" x="20" y="318" width="280" height="30"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <segments>
+                                    <segment title="Map"/>
+                                    <segment title="Sattelite"/>
+                                    <segment title="Hybrid"/>
+                                </segments>
+                            </segmentedControl>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" id="GJC-ZE-aJM"/>
                     <connections>
+                        <outlet property="MapSwitch" destination="XeC-UF-KsG" id="vsc-cd-m96"/>
                         <outlet property="mapView" destination="haP-pm-GbO" id="Ye2-Np-jdu"/>
                         <segue destination="u8n-kE-TJ4" kind="push" identifier="showPhotoView" id="EJR-kE-8g8"/>
                     </connections>
@@ -325,6 +345,7 @@
         <class className="MapViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/MapViewController.h"/>
             <relationships>
+                <relationship kind="outlet" name="MapSwitch" candidateClass="UISegmentedControl"/>
                 <relationship kind="outlet" name="mapView" candidateClass="MKMapView"/>
             </relationships>
         </class>
@@ -353,7 +374,7 @@
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="XHG-27-iVw"/>
-        <segue reference="FxU-4z-JVv"/>
+        <segue reference="VTP-eC-G10"/>
+        <segue reference="EJR-kE-8g8"/>
     </inferredMetricsTieBreakers>
 </document>
