@@ -80,7 +80,13 @@
                             </tableViewCell>
                         </prototypes>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Recently Viewed" id="KiQ-RI-2Ot"/>
+                    <navigationItem key="navigationItem" title="Recently Viewed" id="KiQ-RI-2Ot">
+                        <barButtonItem key="rightBarButtonItem" title="Map" id="r8z-f4-kxs">
+                            <connections>
+                                <segue destination="FWD-6B-4aD" kind="push" identifier="showMapView" id="uAB-Qc-D88"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="blackTranslucent"/>
                 </viewController>
             </objects>
@@ -124,9 +130,14 @@
                         </prototypes>
                     </tableView>
                     <navigationItem key="navigationItem" title="Top Places" id="rzU-dd-1lI">
-                        <barButtonItem key="rightBarButtonItem" title="Reload" id="iPz-CX-WvN">
+                        <barButtonItem key="leftBarButtonItem" title="Reload" id="iPz-CX-WvN">
                             <connections>
                                 <action selector="reloadTopPlaces:" destination="grl-K1-Yqb" id="0ce-fS-p7q"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Map" id="d6I-ai-3q1">
+                            <connections>
+                                <segue destination="qpO-98-3Gz" kind="push" identifier="showMapView" id="Jif-4R-lZF"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -184,7 +195,13 @@
                             <outlet property="delegate" destination="VcI-Dj-70H" id="siR-Nw-Dl1"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="KFE-WN-8pP"/>
+                    <navigationItem key="navigationItem" id="KFE-WN-8pP">
+                        <barButtonItem key="rightBarButtonItem" title="Map" id="uVr-lC-4ue">
+                            <connections>
+                                <segue destination="FWD-6B-4aD" kind="push" identifier="showMapView" id="EM3-GM-e9X"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="blackTranslucent"/>
                 </tableViewController>
             </objects>
@@ -269,11 +286,97 @@
             </objects>
             <point key="canvasLocation" x="740" y="1678"/>
         </scene>
+        <!--Map View Controller-->
+        <scene sceneID="Ln1-0T-wg7">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="pxg-Qr-ZiI" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewController id="qpO-98-3Gz" customClass="MapViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Xbc-gy-Nmq">
+                        <rect key="frame" x="0.0" y="64" width="320" height="739"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" id="BOr-PK-dh0">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="739"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            </mapView>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" id="ReA-o5-hP7">
+                                <rect key="frame" x="20" y="690" width="280" height="30"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <segments>
+                                    <segment title="Map"/>
+                                    <segment title="Sattelite"/>
+                                    <segment title="Hybrid"/>
+                                </segments>
+                                <connections>
+                                    <action selector="mapSwitchPressed:" destination="qpO-98-3Gz" eventType="valueChanged" id="bmc-bD-7Ow"/>
+                                </connections>
+                            </segmentedControl>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="pEq-5q-vGc"/>
+                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="blackTranslucent"/>
+                    <connections>
+                        <outlet property="MapSwitch" destination="ReA-o5-hP7" id="OW2-Lv-yVe"/>
+                        <outlet property="mapSwitch" destination="ReA-o5-hP7" id="JK8-7n-wV6"/>
+                        <outlet property="mapView" destination="BOr-PK-dh0" id="cXN-Te-bfI"/>
+                        <segue destination="FWD-6B-4aD" kind="push" identifier="nextMapView" id="pA8-jc-zvG"/>
+                    </connections>
+                </viewController>
+            </objects>
+            <point key="canvasLocation" x="1774" y="-1469"/>
+        </scene>
+        <!--Map View Controller-->
+        <scene sceneID="yog-e3-crS">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="eMe-rl-6o2" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewController id="FWD-6B-4aD" customClass="MapViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="PFP-tl-W7h">
+                        <rect key="frame" x="0.0" y="64" width="320" height="739"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" id="a3K-H5-01c">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="739"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            </mapView>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" id="OJs-Qp-xBn">
+                                <rect key="frame" x="20" y="690" width="280" height="30"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <segments>
+                                    <segment title="Map"/>
+                                    <segment title="Sattelite"/>
+                                    <segment title="Hybrid"/>
+                                </segments>
+                                <connections>
+                                    <action selector="mapSwitchPressed:" destination="FWD-6B-4aD" eventType="valueChanged" id="GL5-MO-yrp"/>
+                                </connections>
+                            </segmentedControl>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="Gmd-aY-ELA"/>
+                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="blackTranslucent"/>
+                    <connections>
+                        <outlet property="MapSwitch" destination="OJs-Qp-xBn" id="Uhm-jR-vat"/>
+                        <outlet property="mapSwitch" destination="OJs-Qp-xBn" id="P6g-gZ-wQa"/>
+                        <outlet property="mapView" destination="a3K-H5-01c" id="wI4-0H-8ZJ"/>
+                    </connections>
+                </viewController>
+            </objects>
+            <point key="canvasLocation" x="2182" y="-1469"/>
+        </scene>
     </scenes>
     <resources>
         <image name="photo.png" width="156" height="156"/>
     </resources>
     <classes>
+        <class className="MapViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/MapViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="mapSwitch" candidateClass="UISegmentedControl"/>
+                <relationship kind="outlet" name="mapView" candidateClass="MKMapView"/>
+            </relationships>
+        </class>
         <class className="PhotoViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/PhotoViewController.h"/>
             <relationships>
@@ -291,6 +394,7 @@
         <class className="TopPlacesTableViewController" superclassName="UITableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/TopPlacesTableViewController.h"/>
             <relationships>
+                <relationship kind="outlet" name="mapButton" candidateClass="UIBarButtonItem"/>
                 <relationship kind="outlet" name="reloadButton" candidateClass="UIBarButtonItem"/>
             </relationships>
         </class>
@@ -300,4 +404,7 @@
         <simulatedOrientationMetrics key="orientation"/>
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
+    <inferredMetricsTieBreakers>
+        <segue reference="uAB-Qc-D88"/>
+    </inferredMetricsTieBreakers>
 </document>

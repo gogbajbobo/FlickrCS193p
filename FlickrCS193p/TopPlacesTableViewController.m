@@ -208,10 +208,7 @@
         [segue.destinationViewController setTitle:self.selectedPlace];
     }
     if ([segue.identifier isEqualToString:@"showMapView"]) {
-        if ([segue.destinationViewController isKindOfClass:[MapViewController class]]) {
-            MapViewController *mapVC = segue.destinationViewController;
-            mapVC.annotations = [self mapAnnotations];
-        }
+        [segue.destinationViewController setAnnotations:[self mapAnnotations]];
     }
 }
 

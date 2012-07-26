@@ -154,6 +154,15 @@
     return pinView;
 }
 
+- (PhotoViewController *)splitViewPhotoViewController{
+    
+    id phvc = [self.splitViewController.viewControllers lastObject];
+    if (![phvc isKindOfClass:[PhotoViewController class]]) {
+        phvc = nil;
+    }
+    return phvc;
+}
+
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control
 {
     FlickrAnnotation *flickrAnnotation = view.annotation;
@@ -172,7 +181,12 @@
             [self addPhotoToRecentPhotosList:self.selectedObject];
             dispatch_async(dispatch_get_main_queue(), ^{
                 [spinner stopAnimating];
-                [self performSegueWithIdentifier:@"showPhotoView" sender:self];
+                if ([self splitViewPhotoViewController]) {
+                    [self splitViewPhotoViewController].title = self.nextTitle;
+                    [self splitViewPhotoViewController].photo = self.image;
+                } else {
+                    [self performSegueWithIdentifier:@"showPhotoView" sender:self];
+                }
             });
         });
     }
