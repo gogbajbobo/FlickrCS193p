@@ -16,6 +16,9 @@
 #define FLICKR_LATITUDE @"latitude"
 #define FLICKR_LONGITUDE @"longitude"
 #define FLICKR_PHOTO_COUNT @"photo_count"
+#define FLICKR_PHOTO_PLACE_NAME @"derived_place"
+#define FLICKR_TAGS @"tags"
+#define FLICKR_PLACE_ID @"place_id"
 
 typedef enum {
 	FlickrPhotoFormatSquare = 1,
@@ -28,5 +31,6 @@ typedef enum {
 + (NSArray *)topPlaces;
 + (NSArray *)photosInPlace:(NSDictionary *)place maxResults:(int)maxResults;
 + (NSURL *)urlForPhoto:(NSDictionary *)photo format:(FlickrPhotoFormat)format;
++ (NSArray *)recentGeoreferencedPhotos;
 
 @end

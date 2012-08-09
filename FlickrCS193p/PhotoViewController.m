@@ -61,7 +61,7 @@
     float xScale;
     float height;
     float width;
-    
+
     if (UIInterfaceOrientationIsPortrait(self.interfaceOrientation)) {
         height = self.view.bounds.size.height;
         width = self.view.bounds.size.width;
