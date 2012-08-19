@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1171" systemVersion="11E53" minimumToolsVersion="Xcode 4.1" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="Place" representedClassName="Place" syncable="YES">
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="placeID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="placeURL" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="vacation" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Vacation" inverseName="itenerary" inverseEntity="Vacation" syncable="YES"/>
+    </entity>
+    <entity name="Tag" representedClassName="Tag" syncable="YES">
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="tagID" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="vacation" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Vacation" inverseName="tags" inverseEntity="Vacation" syncable="YES"/>
+    </entity>
+    <entity name="Vacation" representedClassName="Vacation" syncable="YES">
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="vacID" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="itenerary" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Place" inverseName="vacation" inverseEntity="Place" syncable="YES"/>
+        <relationship name="tags" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Tag" inverseName="vacation" inverseEntity="Tag" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="Vacation" positionX="-7191" positionY="-1728" width="128" height="105"/>
+        <element name="Place" positionX="-7011" positionY="-1764" width="128" height="105"/>
+        <element name="Tag" positionX="-7004" positionY="-1620" width="128" height="90"/>
+    </elements>
+</model>

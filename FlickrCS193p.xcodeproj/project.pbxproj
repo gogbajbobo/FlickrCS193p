@@ -29,6 +29,10 @@
 		2CE471A415D3E41B00B092DB /* VacationsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE471A315D3E41A00B092DB /* VacationsTableViewController.m */; };
 		2CE471A615D3E45800B092DB /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE471A515D3E45800B092DB /* CoreData.framework */; };
 		2CE471A915D3E4AC00B092DB /* CoreDataTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE471A815D3E4A900B092DB /* CoreDataTableViewController.m */; };
+		2CE471AC15D438F900B092DB /* VacationModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2CE471AA15D438F900B092DB /* VacationModel.xcdatamodeld */; };
+		2CE471C115E11FDA00B092DB /* Place.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE471C015E11FD900B092DB /* Place.m */; };
+		2CE471C415E11FE000B092DB /* Tag.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE471C315E11FDD00B092DB /* Tag.m */; };
+		2CE471C715E1201F00B092DB /* Vacation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE471C615E1201F00B092DB /* Vacation.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -70,6 +74,13 @@
 		2CE471A515D3E45800B092DB /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		2CE471A715D3E4A900B092DB /* CoreDataTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreDataTableViewController.h; sourceTree = "<group>"; };
 		2CE471A815D3E4A900B092DB /* CoreDataTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoreDataTableViewController.m; sourceTree = "<group>"; };
+		2CE471AB15D438F900B092DB /* VacationModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = VacationModel.xcdatamodel; sourceTree = "<group>"; };
+		2CE471BF15E11FD700B092DB /* Place.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Place.h; sourceTree = "<group>"; };
+		2CE471C015E11FD900B092DB /* Place.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Place.m; sourceTree = "<group>"; };
+		2CE471C215E11FDB00B092DB /* Tag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tag.h; sourceTree = "<group>"; };
+		2CE471C315E11FDD00B092DB /* Tag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tag.m; sourceTree = "<group>"; };
+		2CE471C515E11FE400B092DB /* Vacation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vacation.h; sourceTree = "<group>"; };
+		2CE471C615E1201F00B092DB /* Vacation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Vacation.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -149,6 +160,13 @@
 				2C86D6B91566690E00458CBC /* PhotoViewController.m */,
 				2CE471A215D3E41800B092DB /* VacationsTableViewController.h */,
 				2CE471A315D3E41A00B092DB /* VacationsTableViewController.m */,
+				2CE471AA15D438F900B092DB /* VacationModel.xcdatamodeld */,
+				2CE471C515E11FE400B092DB /* Vacation.h */,
+				2CE471C615E1201F00B092DB /* Vacation.m */,
+				2CE471BF15E11FD700B092DB /* Place.h */,
+				2CE471C015E11FD900B092DB /* Place.m */,
+				2CE471C215E11FDB00B092DB /* Tag.h */,
+				2CE471C315E11FDD00B092DB /* Tag.m */,
 				2C39142E1562903B0082277A /* Supporting Files */,
 			);
 			path = FlickrCS193p;
@@ -243,6 +261,10 @@
 				2CE4714A15BF13A400B092DB /* FlickrCache.m in Sources */,
 				2CE471A415D3E41B00B092DB /* VacationsTableViewController.m in Sources */,
 				2CE471A915D3E4AC00B092DB /* CoreDataTableViewController.m in Sources */,
+				2CE471AC15D438F900B092DB /* VacationModel.xcdatamodeld in Sources */,
+				2CE471C115E11FDA00B092DB /* Place.m in Sources */,
+				2CE471C415E11FE000B092DB /* Tag.m in Sources */,
+				2CE471C715E1201F00B092DB /* Vacation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -367,6 +389,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		2CE471AA15D438F900B092DB /* VacationModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				2CE471AB15D438F900B092DB /* VacationModel.xcdatamodel */,
+			);
+			currentVersion = 2CE471AB15D438F900B092DB /* VacationModel.xcdatamodel */;
+			path = VacationModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 2C39141A1562903B0082277A /* Project object */;
 }
