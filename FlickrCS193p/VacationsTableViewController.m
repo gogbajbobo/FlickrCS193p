@@ -7,6 +7,8 @@
 //
 
 #import "VacationsTableViewController.h"
+#import "FlickrFetcher.h"
+#import "Place.h"
 
 @interface VacationsTableViewController ()
 
@@ -40,19 +42,36 @@
     if (![[NSFileManager defaultManager] fileExistsAtPath:[self.vacationDatabase.fileURL path]]) {
         [self.vacationDatabase saveToURL:self.vacationDatabase.fileURL forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL success) {
 //            [self setupFetchedResultsController];
-//            [self fetchFlickrDataIntoDocument:self.photoDatabase];
-            NSLog(@"1");
+            [self fetchFlickrDataIntoDocument:self.vacationDatabase];
+            NSLog(@"!fileExistsAtPath");
         }];
     } else if (self.vacationDatabase.documentState == UIDocumentStateClosed) {
         [self.vacationDatabase openWithCompletionHandler:^(BOOL success) {
+            [self fetchFlickrDataIntoDocument:self.vacationDatabase];
 //            [self setupFetchedResultsController];
-            NSLog(@"2");
+            NSLog(@"UIDocumentStateClosed");
         }];
     } else if (self.vacationDatabase.documentState == UIDocumentStateNormal) {
 //        [self setupFetchedResultsController];
-        NSLog(@"3");
+        NSLog(@"UIDocumentStateNormal");
     }
 }
+
+- (void)fetchFlickrDataIntoDocument:(UIManagedDocument *)document
+{
+    dispatch_queue_t fetchQ = dispatch_queue_create("Flickr fetcher", NULL);
+    dispatch_async(fetchQ, ^{
+        NSArray *photos = [FlickrFetcher recentGeoreferencedPhotos];
+        NSLog(@"photos %@", photos);
+        [document.managedObjectContext performBlock:^{
+            for (NSDictionary *flickrInfo in photos) {
+//                [Place photoWithFlickrInfo:flickrInfo inMabagedObjectContex:document.managedObjectContext];
+            }
+        }];
+    });
+    dispatch_release(fetchQ);
+}
+
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {

@@ -7,6 +7,7 @@
 //
 
 #import "Tag.h"
+#import "Photo.h"
 #import "Vacation.h"
 
 
@@ -15,5 +16,6 @@
 @dynamic name;
 @dynamic tagID;
 @dynamic vacation;
+@dynamic photos;
 
 @end

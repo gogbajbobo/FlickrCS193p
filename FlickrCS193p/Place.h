@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-@class Vacation;
+@class Photo, Vacation;
 
 @interface Place : NSManagedObject
 
@@ -17,5 +17,14 @@
 @property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSString * placeURL;
 @property (nonatomic, retain) Vacation *vacation;
+@property (nonatomic, retain) NSSet *photos;
+@end
+
+@interface Place (CoreDataGeneratedAccessors)
+
+- (void)addPhotosObject:(Photo *)value;
+- (void)removePhotosObject:(Photo *)value;
+- (void)addPhotos:(NSSet *)values;
+- (void)removePhotos:(NSSet *)values;
 
 @end

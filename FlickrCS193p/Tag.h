@@ -9,12 +9,21 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-@class Vacation;
+@class Photo, Vacation;
 
 @interface Tag : NSManagedObject
 
 @property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSString * tagID;
 @property (nonatomic, retain) Vacation *vacation;
+@property (nonatomic, retain) NSSet *photos;
+@end
+
+@interface Tag (CoreDataGeneratedAccessors)
+
+- (void)addPhotosObject:(Photo *)value;
+- (void)removePhotosObject:(Photo *)value;
+- (void)addPhotos:(NSSet *)values;
+- (void)removePhotos:(NSSet *)values;
 
 @end

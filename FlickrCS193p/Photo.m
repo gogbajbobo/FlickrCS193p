@@ -1,22 +1,22 @@
 //
-//  Place.m
+//  Photo.m
 //  FlickrCS193p
 //
 //  Created by Григорьев Максим on 8/19/12.
 //  Copyright (c) 2012 Maxim V. Grigoriev. All rights reserved.
 //
 
-#import "Place.h"
 #import "Photo.h"
-#import "Vacation.h"
+#import "Place.h"
+#import "Tag.h"
 
 
-@implementation Place
+@implementation Photo
 
-@dynamic placeID;
-@dynamic name;
-@dynamic placeURL;
-@dynamic vacation;
-@dynamic photos;
+@dynamic title;
+@dynamic photoURL;
+@dynamic photoID;
+@dynamic place;
+@dynamic tags;
 
 @end
